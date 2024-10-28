@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="jumbotron">
+    <header class="mt-4">
+      <h1 class="text-left">Current Settings</h1>
+    </header>
+    <form method="POST">
+      <label for="rotation_speed">Rotaion Speed:</label>
+      <input type="text" id="rotation_speed" name="rotation_speed" value="{{ config['rotation'] }}" required><br><br>
+      <input type="submit" value="Save">
+      <button id="defaultSettings" onclick="loadDefaultConfig()">Default Settings</button>
+      <!-- <button onclick="callPythonScript()">Run Script</button> -->
+      
+  </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+        $('#defaultSettings').click(function() {
+            $.get('/loadDefaults', function(data) {
+                $('#rotation_speed').text(data.rotation_speed);
+                console.log("rotation speed :" + data.rotation_speed);
+            }).fail(function() {
+                console.error('Error fetching message');
+            });
+        });
+    });
+  </script>
+  <script>
+    function callPythonScript() {
+        fetch('/run-script', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message); // Handle the response here
+            alert(data.message); // Show the message in an alert
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function loadDefaultConfig() {
+        fetch('/loadDefaults', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.rotation_speed); // Handle the response here
+            alert(data.rotation_speed); // Show the message in an alert
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}
