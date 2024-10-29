@@ -3,19 +3,56 @@
 {% block body %}
     <div class="jumbotron">
         <h1>Joystick Simulator</h1>
-        <div class="container text-center mt-5">
-            <button class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <button class="btn btn-primary">
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            <button class="btn btn-primary">
-                <i class="fas fa-arrow-right"></i>
-            </button>
-            <button class="btn btn-primary">
-                <i class="fas fa-arrow-down"></i>
-            </button>
-        </div>
+        <div class="container text-left mt-5">
+            <div id="joystick">
+                <div id="stick"></div>
+            </div>
+            
+            <!-- <div class="button-main">
+                <div class="button-container">
+                    <button class="btn btn-primary long-press-btn button button1" onmousedown="handleTouchStart('left')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                        <i class="fas fa-arrow-left">
+                            Left
+                        </i>
+                    </button>
+                    <button class="btn btn-primary long-press-btn button button2" onmousedown="handleTouchStart('up')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                        <i class="fas fa-arrow-up">
+                            Up
+                        </i>
+                    </button>
+                    <button class="btn btn-primary long-press-btn button button3"onmousedown="handleTouchStart('right')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                        <i class="fas fa-arrow-right">
+                            Right
+                        </i>
+                    </button>
+                    <button class="btn btn-primary long-press-btn button button4"onmousedown="handleTouchStart('down')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                        <i class="fas fa-arrow-down">
+                            Down
+                        </i>
+                    </button>
+                </div>
+            </div>
+            <div id="message"></div>
+        </div> -->
     </div>
+    <script>
+        let pressTimer;
+
+        function handleTouchStart(direction) {
+            pressTimer = setTimeout(function() {
+                    fetch(`/long_press/${direction}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message); 
+                    })
+                    .catch(error => console.error('Error:', error));
+                }, 1000);
+        }
+
+        function handleTouchEnd() {
+            clearTimeout(pressTimer);
+        }
+    </script>
 {% endblock %}

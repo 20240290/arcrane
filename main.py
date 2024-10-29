@@ -23,6 +23,25 @@ import logging
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from configparser import ConfigParser
+
+#Arcrane methods
+# import curses
+# from gpiozero import OutputDevice
+# from time import sleep
+
+# # Pin setup (adjust GPIO pins according to your wiring)
+# STEP_PIN = 17  # GPIO pin for the step signal
+# DIR_PIN = 27   # GPIO pin for the direction control
+
+# # Set up the GPIO pins
+# step = OutputDevice(STEP_PIN)
+# direction = OutputDevice(DIR_PIN)
+
+# # Motor settings
+# steps_per_revolution = 200  # Assuming 200 steps for 1 full revolution (adjust if needed)
+# degrees_per_step = 360 / steps_per_revolution
+# steps_per_90_degrees = int(90 / degrees_per_step)
+# step_delay = 0.001  # Delay between steps (in seconds)
         
 app = Flask(__name__)
 config = ConfigParser()
@@ -49,6 +68,12 @@ def configuration():
 def joystick():
     return render_template("joystick.html")
 
+@app.route('/move_joystick/<direction>')
+def move_joystick(direction):
+    # Here you can handle the joystick input
+    print(f"Joystick moved: {direction}")
+    return jsonify({'status': 'success', 'direction': direction})
+
 @app.route("/loadDefaults", methods=['POST'])
 def loadDefaults():
     data = {'rotation_speed': '1000'}
@@ -59,7 +84,21 @@ def run_script():
     # Your Python script logic here
     result = {"message": "Script executed successfully!"}
     return jsonify(result)
+
+@app.route('/long_press', methods=['POST'])
+def long_press():
+    # Handle the long-press action here
+    return jsonify(message="Long press action triggered!")
     
+def rotate(steps, direction_forward=True):
+    # Set direction
+    direction.value = direction_forward
+    # Perform the steps
+    for _ in range(steps):
+        step.on()
+        sleep(step_delay)
+        step.off()
+        sleep(step_delay)
 
 if __name__ == '__main__':
     app.run(debug=True)

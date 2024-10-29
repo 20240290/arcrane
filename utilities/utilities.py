@@ -13,6 +13,15 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
+ 
+ #class contains all calculations of the motors
+import constants as const
+
+# Motor settings
+# steps_per_revolution = 200  # Assuming 200 steps for 1 full revolution (adjust if needed)
+# degrees_per_step = 360 / steps_per_revolution
+# steps_per_90_degrees = int(90 / degrees_per_step)
+# step_delay = 0.001  # Delay between steps (in seconds)
 
 class Utilities:
     _instance = None
@@ -21,3 +30,5 @@ class Utilities:
         if not cls._instance:
             cls._instance = super(Utilities, cls).__new__(cls)
         return cls._instance
+    
+    
