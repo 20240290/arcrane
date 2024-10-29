@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./PWM_Stepper_Motor_02_"
+    ]
+}
