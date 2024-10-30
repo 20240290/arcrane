@@ -53,8 +53,13 @@ class Utilities:
             self.config.write(configfile) 
         return self.config['Settings']  
     
-    def get_configuration(self):
-        pass
+    def get_configuration(self, param):
+        self.config.read('config.ini')
+        val = self.config["Settings"][param]
+        print(f"param config: {param}")
+        print(f"get config: {val}")
+        return self.config["Settings"][param]
+
 
     def loadDefaultConfiguration(self):
         self.config.read('config.ini')
@@ -74,5 +79,5 @@ class Utilities:
                 "M4_DIR_PIN": const.M4_DIR_PIN
             }})
 
-            return config
+            return self.config
        

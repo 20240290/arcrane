@@ -14,18 +14,27 @@
  limitations under
  """
 
+from gpiozero import OutputDevice
+from time import sleep
+import constants as const
 from classes.PWMStepperMotor import PWMStepperMotor
 
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    motors = []
-
+    motor: PWMStepperMotor
     def __init__(self, step: int, drive: int, direction_forward=True):
         """Initialize movement coordinates."""
         self.x = 0
         self.y = 0
-        self.motor = PWMStepperMotor(step=step,drive=drive, direction_forward=direction_forward)
+        self.step = step
+        self.drive = drive
+        self.direction = direction_forward
+
+    def setMotor(self):
+        self.motor = PWMStepperMotor(step=self.step,
+                                     drive=self.drive, 
+                                     direction_forward=self.direction)
 
     def move_up(self, distance=1):
         """Move up by a specified distance."""
@@ -40,9 +49,7 @@ class DeviceMovements:
     def move_left(self, distance=1):
         """Move left by a specified distance."""
         self.x -= distance
-
         self.motor.rotate_motor()
-
         return self.get_position()
 
     def move_right(self, distance=1):
