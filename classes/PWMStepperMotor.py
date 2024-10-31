@@ -21,9 +21,27 @@ import constants as const
 """ Generic Stepper Motor Class """
 
 class PWMStepperMotor():
-    def __init__(self, step: int, drive: int, direction_forward=True):
+    motor_step = 0
+    motor_dir = 0
+    direction_forward = False
+
+    def __init__(self):
         """
         Default Class initializer with that accepts the Output device pin.
+
+        Parameters:
+        -----------
+        None
+
+        Return:
+        -------
+        None
+        """
+        pass
+    
+    def setMotor(self, step: int, drive: int, direction_forward=True):
+        """
+        Setup and pin out output device.
 
         Parameters:
         -----------
@@ -40,7 +58,7 @@ class PWMStepperMotor():
         """
         self.motor_step = OutputDevice(step)
         self.motor_dir = OutputDevice(drive)
-        self.direction = direction_forward
+        self.direction_forward = direction_forward
 
     
     def rotate_motor(self):
@@ -56,7 +74,7 @@ class PWMStepperMotor():
         None
         """
         """"""
-        self.motor_dir.value = self.direction
+        self.motor_dir.value = self.direction_forward
         self.motor_step.on()
         sleep(const.STEP_DELAY)
         self.motor_step.off()

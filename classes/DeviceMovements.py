@@ -22,7 +22,7 @@ from classes.PWMStepperMotor import PWMStepperMotor
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    motor: PWMStepperMotor
+    motor = PWMStepperMotor()
     def __init__(self, step: int, drive: int, direction_forward=True):
         """Initialize movement coordinates."""
         self.x = 0
@@ -31,10 +31,11 @@ class DeviceMovements:
         self.drive = drive
         self.direction = direction_forward
 
-    def setMotor(self):
-        self.motor = PWMStepperMotor(step=self.step,
-                                     drive=self.drive, 
-                                     direction_forward=self.direction)
+    def setDeviceOutput(self):
+        """ Set Device Output """
+        self.motor.setMotor(step=self.step,
+                            drive=self.drive, 
+                            direction_forward=self.direction)
 
     def move_up(self, distance=1):
         """Move up by a specified distance."""

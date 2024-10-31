@@ -122,10 +122,10 @@ def long_press(direction):
     return jsonify({'status': 'success', 'direction': direction})
 
 def initializeMotors():
-    movement1.setMotor()
-    movement2.setMotor()
-    movement3.setMotor()
-    movement4.setMotor()
+    movement1.setDeviceOutput()
+    movement2.setDeviceOutput()
+    movement3.setDeviceOutput()
+    movement4.setDeviceOutput()
 
 if __name__ == '__main__':
     try:
