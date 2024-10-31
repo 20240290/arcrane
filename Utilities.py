@@ -18,6 +18,8 @@
 import constants as const
 from configparser import ConfigParser
 import json
+import lgpio
+import time
 
 #utility class
 class Utilities:
@@ -80,4 +82,17 @@ class Utilities:
             }})
 
             return self.config
-       
+
+    def clearGPIOPin(self,pin):
+        try:
+            chip = lgpio.gpiochip_open(0)
+            # Claim the pin as an output
+            lgpio.gpio_claim_output(chip, pin)
+
+            # Set the pin high
+            lgpio.gpio_write(chip, pin, 1)  # Set high
+            # Set the pin low
+            lgpio.gpio_write(chip, pin, 0)  # Set low
+
+        finally:
+            lgpio.gpiochip_close(chip) 

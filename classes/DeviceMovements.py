@@ -22,20 +22,26 @@ from classes.PWMStepperMotor import PWMStepperMotor
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    motor = PWMStepperMotor()
+    #motor = PWMStepperMotor()
+    used_pins = set() #track used pins
     def __init__(self, step: int, drive: int, direction_forward=True):
         """Initialize movement coordinates."""
         self.x = 0
         self.y = 0
+
+        print(f"self.is_pin_in_use {self.is_pin_in_use}")
         self.step = step
         self.drive = drive
         self.direction = direction_forward
+        self.motor = PWMStepperMotor(step, drive, direction_forward)
+        
 
     def setDeviceOutput(self):
         """ Set Device Output """
-        self.motor.setMotor(step=self.step,
-                            drive=self.drive, 
-                            direction_forward=self.direction)
+        pass
+        # self.motor.setMotor(step=self.step,
+        #                     drive=self.drive, 
+        #                     direction_forward=self.direction)
 
     def move_up(self, distance=1):
         """Move up by a specified distance."""
@@ -64,3 +70,12 @@ class DeviceMovements:
     def get_position(self):
         """Return the current position as a tuple (x, y)."""
         return (self.x, self.y)
+    
+    def is_pin_in_use(self, pin):
+        return pin in self.used_pins
+
+    def add_pin(self, pin):
+        self.used_pins.add(pin)
+
+    def remove_pin(self, pin):
+        self.used_pins.discard(pin)

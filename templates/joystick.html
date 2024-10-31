@@ -1,35 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+
     <div class="jumbotron">
         <h1>Joystick Simulator</h1>
         <div class="container text-center mt-5">
             <div id="joystick">
                 <div id="stick"></div>
             </div>
-            
+      
             <!-- <div class="button-main">
                 <div class="button-container">
-                    <button class="btn btn-primary long-press-btn button button1" onmousedown="handleTouchStart('up')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                    <div class="btn btn-primary long-press-btn button button1" id="up">
                         <i class="fas fa-arrow-left">
                             Up
                         </i>
-                    </button>
-                    <button class="btn btn-primary long-press-btn button button2" onmousedown="handleTouchStart('down')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                    </div>
+                    <div class="btn btn-primary long-press-btn button button2">
                         <i class="fas fa-arrow-up">
                             Down
                         </i>
-                    </button>
-                    <button class="btn btn-primary long-press-btn button button3"onmousedown="handleTouchStart('left')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                    </div>
+                    <div class="btn btn-primary long-press-btn button button3">
                         <i class="fas fa-arrow-right">
                             Left
                         </i>
-                    </button>
-                    <button class="btn btn-primary long-press-btn button button4"onmousedown="handleTouchStart('right')" onmouseup="handleTouchEnd()" onmouseleave="handleTouchEnd()">
+                    </div>
+                    <div class="btn btn-primary long-press-btn button button4">
                         <i class="fas fa-arrow-down">
                             Right
                         </i>
-                    </button>
+                    </div>
                 </div>
             </div>
             <div id="message"></div> -->
@@ -54,5 +55,45 @@
         function handleTouchEnd() {
             clearTimeout(pressTimer);
         }
+    </script>
+    <script>
+        const up = document.getElementById('up');
+        let longPressTimeout;
+    
+        const longPressDuration = 600; // Duration in milliseconds
+    
+        const startLongPress = () => {
+            // longPressTimeout = setTimeout(() => {
+            //     //alert('Long press detected!');
+            //     const dir = 'up'
+            //     fetch(`/move_joystick/${dir}`);
+            // }, longPressDuration);
+            longPressTimeout = setTimeout(function() {
+                    const direction = 'up'
+                    fetch(`/move_joystick/${direction}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message); 
+                    })
+                    .catch(error => console.error('Error:', error));
+                }, 600);
+        };
+    
+        const cancelLongPress = () => {
+            clearTimeout(longPressTimeout);
+        };
+    
+        // For mouse events
+        up.addEventListener('mousedown', startLongPress);
+        up.addEventListener('mouseup', cancelLongPress);
+        up.addEventListener('mouseleave', cancelLongPress);
+    
+        // For touch events
+        up.addEventListener('touchstart', startLongPress);
+        up.addEventListener('touchend', cancelLongPress);
+        up.addEventListener('touchcancel', cancelLongPress);
+    
     </script>
 {% endblock %}

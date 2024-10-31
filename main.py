@@ -34,10 +34,15 @@ utility = Utilities.Utilities()
 
 logging.basicConfig(level=logging.DEBUG)
 
-movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
-movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
-movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
-movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+# utility.clearGPIOPin(const.M1_STEP_PIN)
+# utility.clearGPIOPin(const.M2_STEP_PIN)
+# utility.clearGPIOPin(const.M3_STEP_PIN)
+# utility.clearGPIOPin(const.M4_STEP_PIN)
+
+# movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
+# movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
+# movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
+# movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
 
 
 @app.route("/")
@@ -78,11 +83,11 @@ def joystick():
 def move_joystick(direction):
     # Here you can handle the joystick input
     print(f"Joystick moved: {direction}")
-    # movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
-    # movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
-    # movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
-    # movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
-    if direction == 'up-right':
+    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
+    movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
+    movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
+    movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+    if direction == 'up':
         movement1.motor.rotate_motor()
     elif direction == 'up-left':
         movement2.motor.rotate_motor()    
@@ -110,8 +115,9 @@ def long_press(direction):
     # Handle the long-press action here
     #return jsonify(message="Long press action triggered!")
     print(f"Joystick moved: {direction}")
-    # if direction == 'up':
-    #     movement1.motor.rotate_motor()
+    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
+    if direction == 'up':
+        movement1.motor.rotate_motor()
     # elif direction == 'down':
     #     movement2.motor.rotate_motor()    
     # elif direction == 'left':
@@ -122,15 +128,16 @@ def long_press(direction):
     return jsonify({'status': 'success', 'direction': direction})
 
 def initializeMotors():
-    movement1.setDeviceOutput()
-    movement2.setDeviceOutput()
-    movement3.setDeviceOutput()
-    movement4.setDeviceOutput()
+    pass
+    # movement1.setDeviceOutput()
+    # movement2.setDeviceOutput()
+    # movement3.setDeviceOutput()
+    # movement4.setDeviceOutput()
 
 if __name__ == '__main__':
     try:
         app.run(debug=True)
-        curses.wrapper(initializeMotors)
+        #curses.wrapper(initializeMotors)
     except KeyboardInterrupt:
         print("Exiting...")
 
