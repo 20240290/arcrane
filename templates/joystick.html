@@ -1,13 +1,50 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-
+<style>
+    /* body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+    } */
+    #joystick {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        width: 150px;
+        height: 150px;
+    }
+    .button {
+        background-color: #007BFF;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        transition: background-color 0.2s;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+    #output {
+        margin-top: 20px;
+        font-size: 20px;
+    }
+</style>
     <div class="jumbotron">
         <h1>Joystick Simulator</h1>
         <div class="container text-center mt-5">
-            <div id="joystick">
+            <!-- <div id="joystick">
                 <div id="stick"></div>
-            </div>
+            </div> -->
       
             <!-- <div class="button-main">
                 <div class="button-container">
@@ -34,9 +71,20 @@
                 </div>
             </div>
             <div id="message"></div> -->
+            <div class="button-main">
+                <div class="button-container">
+                    <div id="joystick">
+                        <button class="btn btn-primary long-press-btn button button1" id="up">↑</button>
+                        <button class="btn btn-primary long-press-btn button button2" id="left">←</button>
+                        <button class="btn btn-primary long-press-btn button button3" id="down">↓</button>
+                        <button class="btn btn-primary long-press-btn button button4" id="right">→</button>
+                    </div>
+                </div>
+            </div>    
+            <div id="output">Direction: Neutral</div>
         </div>
     </div>
-    <script>
+    <!-- <script>
         let pressTimer;
 
         function handleTouchStart(direction) {
@@ -70,7 +118,7 @@
             // }, longPressDuration);
             longPressTimeout = setTimeout(function() {
                     const direction = 'up'
-                    fetch(`/move_joystick/${direction}`, {
+                    fetch(`/long_press/${direction}`, {
                         method: 'POST'
                     })
                     .then(response => response.json())
@@ -95,5 +143,69 @@
         up.addEventListener('touchend', cancelLongPress);
         up.addEventListener('touchcancel', cancelLongPress);
     
+    </script> -->
+    <!-- <script>
+        const output = document.getElementById('output');
+    
+        function updateDirection(direction) {
+            output.textContent = `Direction: ${direction}`;
+        }
+    
+        document.getElementById('up').addEventListener('click', () => updateDirection('Up'));
+        document.getElementById('down').addEventListener('click', () => updateDirection('Down'));
+        document.getElementById('left').addEventListener('click', () => updateDirection('Left'));
+        document.getElementById('right').addEventListener('click', () => updateDirection('Right'));
+    
+        // Reset direction when clicking elsewhere
+        document.body.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('button')) {
+                output.textContent = 'Direction: Neutral';
+            }
+        });
+    </script> -->
+    <script>
+        const output = document.getElementById('output');
+        let longPressTimer;
+    
+        function updateDirection(direction) {
+            output.textContent = `Direction: ${direction}`;
+            if (direction == 'up') {
+                fetch(`/long_press/${direction}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message); 
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+    
+        function startLongPress(direction) {
+            updateDirection(direction);
+            longPressTimer = setInterval(() => {
+                updateDirection(direction);
+            }, 100); 
+        }
+    
+        function stopLongPress() {
+            clearInterval(longPressTimer);
+            output.textContent = 'Direction: Neutral';
+        }
+    
+        document.getElementById('up').addEventListener('mousedown', () => startLongPress('up'));
+        document.getElementById('down').addEventListener('mousedown', () => startLongPress('down'));
+        document.getElementById('left').addEventListener('mousedown', () => startLongPress('left'));
+        document.getElementById('right').addEventListener('mousedown', () => startLongPress('right'));
+    
+        document.addEventListener('mouseup', stopLongPress);
+        document.addEventListener('mouseleave', stopLongPress); // Also stop if mouse leaves the document
+    
+        // Reset direction when clicking elsewhere
+        document.body.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('button')) {
+                stopLongPress();
+            }
+        });
     </script>
 {% endblock %}
