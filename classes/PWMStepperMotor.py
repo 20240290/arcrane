@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
-
 from gpiozero import OutputDevice
 from time import sleep
 import constants as const
@@ -21,10 +20,6 @@ import constants as const
 """ Generic Stepper Motor Class """
 
 class PWMStepperMotor():
-    # motor_step = 0
-    # motor_dir = 0
-    # direction_forward = False
-
     def __init__(self, step: int, drive: int, direction_forward=True):
         """
         Default Class initializer with that accepts the Output device pin.

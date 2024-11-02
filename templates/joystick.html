@@ -75,8 +75,8 @@
                 <div class="button-container">
                     <div id="joystick">
                         <button class="btn btn-primary long-press-btn button button1" id="up">↑</button>
-                        <button class="btn btn-primary long-press-btn button button2" id="left">←</button>
-                        <button class="btn btn-primary long-press-btn button button3" id="down">↓</button>
+                        <button class="btn btn-primary long-press-btn button button2" id="down">↓</button>
+                        <button class="btn btn-primary long-press-btn button button3" id="left">←</button>
                         <button class="btn btn-primary long-press-btn button button4" id="right">→</button>
                     </div>
                 </div>
@@ -169,7 +169,7 @@
     
         function updateDirection(direction) {
             output.textContent = `Direction: ${direction}`;
-            if (direction == 'up') {
+            //if (direction == 'up') {
                 fetch(`/long_press/${direction}`, {
                         method: 'POST'
                     })
@@ -178,7 +178,7 @@
                         console.log(data.message); 
                     })
                     .catch(error => console.error('Error:', error));
-            }
+            //}
         }
     
         function startLongPress(direction) {

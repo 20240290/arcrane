@@ -28,6 +28,12 @@ import curses
 from gpiozero import OutputDevice
 from time import sleep
 
+# from gpiozero import Device
+# from gpiozero.pins.mock import MockFactory
+# from gpiozero import OutputDevice
+# Device.close()
+#Device.pin_factory = MockFactory()  # For testing, if needed
+
         
 app = Flask(__name__)
 utility = Utilities.Utilities()
@@ -36,13 +42,35 @@ logging.basicConfig(level=logging.DEBUG)
 
 # utility.clearGPIOPin(const.M1_STEP_PIN)
 # utility.clearGPIOPin(const.M2_STEP_PIN)
+
+# utility.clearGPIOPin(const.M1_DIR_PIN)
+# utility.clearGPIOPin(const.M2_DIR_PIN)
+
 # utility.clearGPIOPin(const.M3_STEP_PIN)
 # utility.clearGPIOPin(const.M4_STEP_PIN)
 
 # movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
 # movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
+# movement1.setDeviceOutput()
 # movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
 # movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+
+
+# motor1_step = OutputDevice(const.M1_STEP_PIN)
+# motor1_dir = OutputDevice(const.M1_DIR_PIN)
+
+# OutputDevice.close(motor1_step)
+
+# motor2_step = OutputDevice(const.M2_STEP_PIN)
+# motor2_dir = OutputDevice(const.M2_DIR_PIN)
+
+# def rotate_motor(step_pin, dir_pin, direction_forward=True):
+#     """Rotate the specified motor one step."""
+#     dir_pin.value = direction_forward
+#     step_pin.on()
+#     sleep(const.STEP_DELAY)
+#     step_pin.off()
+#     sleep(const.STEP_DELAY)
 
 
 @app.route("/")
@@ -115,29 +143,25 @@ def long_press(direction):
     # Handle the long-press action here
     #return jsonify(message="Long press action triggered!")
     print(f"Joystick moved: {direction}")
-    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
+    
     if direction == 'up':
+        movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
         movement1.motor.rotate_motor()
-    # elif direction == 'down':
-    #     movement2.motor.rotate_motor()    
-    # elif direction == 'left':
-    #     movement3.motor.rotate_motor()
-    # elif direction == 'right':
-    #     movement4.motor.rotate_motor()
+    elif direction == 'down':
+        movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
+        movement2.motor.rotate_motor()    
+    elif direction == 'left':
+        movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
+        movement3.motor.rotate_motor()
+    elif direction == 'right':
+        movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+        movement4.motor.rotate_motor()
 
     return jsonify({'status': 'success', 'direction': direction})
-
-def initializeMotors():
-    pass
-    # movement1.setDeviceOutput()
-    # movement2.setDeviceOutput()
-    # movement3.setDeviceOutput()
-    # movement4.setDeviceOutput()
 
 if __name__ == '__main__':
     try:
         app.run(debug=True)
-        #curses.wrapper(initializeMotors)
     except KeyboardInterrupt:
         print("Exiting...")
 
