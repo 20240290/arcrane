@@ -155,14 +155,51 @@ def long_press(direction):
 
 
 def initializeMovements():
-    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[{'down': 18}], direction_forward=True)
-    movement1.setUpMovements()
-    movement1.monitorMovements()
+    # movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[{'down': 18}], direction_forward=True)
+    # movement1.setUpMovements()
+    # movement1.monitorMovements()
+    movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, 
+                                         drive=const.M2_DIR_PIN, 
+                                         movements = {
+                                             'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
+                                             'motors': [{
+                                                 'step': const.M2_STEP_PIN, 
+                                                 'drive': const.M2_DIR_PIN, 
+                                                 'direction': True, 
+                                                 'movement': 'up'}]},
+                                         pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
+   # movement2.setUpMovements()
+   # movement2.monitorMovements()
+    movement2.configureMovement()
+
+    # movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[{'right': 21}], direction_forward=True)
+    # movement3.setUpMovements()
+    # movement3.monitorMovements()
+
+def initializeI2c():
+    import smbus
+    import time
+
+    # Create an SMBus instance
+    bus = smbus.SMBus(1)  # Use 1 for Raspberry Pi (newer models)
+
+    SLAVE_ADDRESS = 0x04  # Replace with the actual address of the slave
+
+    try:
+        while True:
+            # Send data
+            data = [0x01, 0x02, 0x03]  # Example data
+            bus.write_i2c_block_data(SLAVE_ADDRESS, 0, data)
+            print("Sent:", data)
+            time.sleep(1)  # Send every second
+    except KeyboardInterrupt:
+        pass    
 
 if __name__ == '__main__':
     try:
-        app.run(debug=True) 
+        #app.run(debug=True) 
         initializeMovements()
+        #initializeI2c()
         
     except KeyboardInterrupt:
         print("Exiting...")

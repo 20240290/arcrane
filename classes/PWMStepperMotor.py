@@ -22,7 +22,8 @@ import constants as const
 class PWMStepperMotor():
     motor_step: OutputDevice
     motor_dir: OutputDevice
-
+    
+    #add a tag to the motor
     def __init__(self, step: int, drive: int, direction_forward=True):
         """
         Default Class initializer with that accepts the Output device pin.
@@ -35,12 +36,12 @@ class PWMStepperMotor():
         -------
         None
         """
-        # self.motor_step = OutputDevice(step)
-        # self.motor_dir = OutputDevice(drive)
+        self.motor_step = OutputDevice(step)
+        self.motor_dir = OutputDevice(drive)
         self.step = step
         self.drive = drive
         self.direction_forward = direction_forward
-        self.setMotor(step=step, drive=drive, direction_forward=direction_forward)
+        #self.setMotor(step=step, drive=drive, direction_forward=direction_forward)
     
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """
