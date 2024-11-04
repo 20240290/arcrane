@@ -20,6 +20,9 @@ import constants as const
 """ Generic Stepper Motor Class """
 
 class PWMStepperMotor():
+    motor_step: OutputDevice
+    motor_dir: OutputDevice
+
     def __init__(self, step: int, drive: int, direction_forward=True):
         """
         Default Class initializer with that accepts the Output device pin.
@@ -32,9 +35,12 @@ class PWMStepperMotor():
         -------
         None
         """
-        self.motor_step = OutputDevice(step)
-        self.motor_dir = OutputDevice(drive)
+        # self.motor_step = OutputDevice(step)
+        # self.motor_dir = OutputDevice(drive)
+        self.step = step
+        self.drive = drive
         self.direction_forward = direction_forward
+        self.setMotor(step=step, drive=drive, direction_forward=direction_forward)
     
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """
@@ -71,24 +77,13 @@ class PWMStepperMotor():
         None
         """
         """"""
-        # try:
-        #     # Use the LED (turn it on and off)
-            # self.motor_dir.value = self.direction_forward
-            # self.motor_step.on()
-            # sleep(const.STEP_DELAY)
-            # self.motor_step.off()
-            # self.motor_dir.off()
+        self.motor_dir.value = self.direction_forward
+        self.motor_step.on()
+        sleep(const.STEP_DELAY)
+        self.motor_step.off()
+        sleep(const.STEP_DELAY)
+        # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
+        #     drive.value = self.direction_forward
+        #     device.on()
         #     sleep(const.STEP_DELAY)
-        #     #self.motor_step.close()
-
-        # finally:
-        #     # Cleanup (turn off and release the GPIO pin)
-        #     self.motor_dir.close()
-        #     self.motor_step.close()
-
-        with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
-            drive.value = self.direction_forward
-            device.on()
-            sleep(const.STEP_DELAY)
-            device.off()
-            drive.off()
+        #     device.off()

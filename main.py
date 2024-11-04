@@ -28,12 +28,6 @@ import curses
 from gpiozero import OutputDevice
 from time import sleep
 
-# from gpiozero import Device
-# from gpiozero.pins.mock import MockFactory
-# from gpiozero import OutputDevice
-# Device.close()
-#Device.pin_factory = MockFactory()  # For testing, if needed
-
         
 app = Flask(__name__)
 utility = Utilities.Utilities()
@@ -145,24 +139,33 @@ def long_press(direction):
     print(f"Joystick moved: {direction}")
     
     if direction == 'up':
-        movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
+        movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[], direction_forward=True)
         movement1.motor.rotate_motor()
     elif direction == 'down':
-        movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
+        movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN, pins=[],direction_forward=True)
         movement2.motor.rotate_motor()    
     elif direction == 'left':
-        movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
+        movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[],direction_forward=True)
         movement3.motor.rotate_motor()
     elif direction == 'right':
-        movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+        movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN, pins=[],direction_forward=True)
         movement4.motor.rotate_motor()
 
     return jsonify({'status': 'success', 'direction': direction})
 
+
+def initializeMovements():
+    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[{'down': 18}], direction_forward=True)
+    movement1.setUpMovements()
+    movement1.monitorMovements()
+
 if __name__ == '__main__':
     try:
-        app.run(debug=True)
+        app.run(debug=True) 
+        initializeMovements()
+        
     except KeyboardInterrupt:
         print("Exiting...")
-
+    finally:
+        print("clean up")
 
