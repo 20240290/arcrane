@@ -23,14 +23,15 @@ from classes.CustomButton import CustomButton
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    used_pins = set() #track used pins
     motors = {}
     movements = {}
-    down_movement: Button
-    up_movement: Button
-    right_movement: Button
-    left_movement: Button
-    directional_movements = [CustomButton]
+    down_movement: CustomButton
+    up_movement: CustomButton
+    right_movement: CustomButton
+    left_movement: CustomButton
+    directional_movements = []
+    button_registry = {}
+    motor_registry = {}
 
     def __init__(self, 
                  step: int, 
@@ -38,7 +39,6 @@ class DeviceMovements:
                  movements: dict,
                  pins: list,
                  direction_forward=True):
-        print(f"self.is_pin_in_use {self.is_pin_in_use}")
         self.step = step
         self.drive = drive
         self.direction = direction_forward
@@ -58,59 +58,44 @@ class DeviceMovements:
         #self.movements[movement] = Button(pin, pull_up=True)
         print(f"movement: {movement}")
         if movement == 'right':
-            self.right_movement = Button(pin, pull_up=True)
+            self.right_movement = CustomButton(pin, tag=movement, pull_up=True) #Button(pin, pull_up=True)
         elif movement == 'down':
-            self.down_movement = Button(pin, pull_up=True)
+            self.down_movement = CustomButton(pin, tag=movement, pull_up=True) #Button(pin, pull_up=True)
         elif movement == 'up':
-            self.up_movement = Button(pin, pull_up=True)
+            self.up_movement = CustomButton(pin, tag=movement, pull_up=True) #Button(pin, pull_up=True)
         elif movement == 'left':
-            self.left_movement = Button(pin, pull_up=True)        
+            self.left_movement = CustomButton(pin, tag=movement, pull_up=True) #Button(pin, pull_up=True)        
 
     def monitorMovements(self):
        print(f"self.movements : {self.movements}")
        while True:
-        #    if self.down_movement.is_active:
-        #         self.motor.rotate_motor()
-        #    elif self.right_movement.is_active:
-        #         self.motor.rotate_motor()
-        #    elif self.up_movement.is_active:
-        #         self.motor.rotate_motor()
-        #    elif self.left_movement.is_active:
-        #        self.motor.rotate_motor()              
-                
-        for item in self.directional_movements:
-            if item.is_active:
+           if self.down_movement.is_active:
+                #self.motor.rotate_motor()
+                down_motor: PWMStepperMotor = self.get_motor_by_tag(self.down_movement.tag)
+                down_motor.rotate_motor()
+           elif self.right_movement.is_active:
                 self.motor.rotate_motor()
-            # print(f"movement value: {value}")
-            # if (key == 'up' & Button(value).is_active):
-            #     print("Up pressed") 
-            # elif (key == 'down' & Button(value).is_active):
-            #     print("Down pressed")    
-            # elif (key == 'left' & Button(value).is_active):
-            #     print("Left pressed")   
-            # elif  (key == 'right' & Button(value).is_active):
-            #     print("Right pressed")   
+           elif self.up_movement.is_active:
+                #self.motor.rotate_motor()
+                up_motor: PWMStepperMotor = self.get_motor_by_tag(self.up_movement.tag)
+                up_motor.rotate_motor()
+           elif self.left_movement.is_active:
+               self.motor.rotate_motor()              
                 
     def configureMovement(self):
-        # movements = {
-        #             'pins': [{'down': 18, 'right': 21, 'up': 26, 'left': 20}], 
-        #             'motors': [{
-        #                 'step': const.M2_STEP_PIN, 
-        #                 'drive': const.M2_DIR_PIN, 
-        #                 'direction': True, 
-        #                 'movement': 'up'}]},
         if "pins" in self.movements:
             joystick = self.movements.get('pins')
             print(f"joystick pins: {joystick}")
             for k,v in joystick.items():
                 print(f"device:  {v}")
-                #self.directional_movements.append(CustomButton(v, pull_up=True, tag=k))
-                #self.directional_movements.append(device[])
-                # for key, value in devices.items():
-                #     self.addMovement(key, value)
-        #button_dict = {button.tag: button for button in self.directional_movements}        
-        #print(f"configureMovement : {button_dict}")
-
+                self.addMovement(k,v)
+        if "motors" in self.movements:
+            motors = self.movements.get('motors')
+            for item in motors:
+                print(f"motors : {item.get('step')}")
+                self.register_motor(item.get('movement'), PWMStepperMotor(item.get('step'), 
+                                                                      item.get('drive'),
+                                                                      item.get('direction')))
     def setDeviceOutput(self, motors: list):
         """ Set Device Output """
         for item in motors:
@@ -155,3 +140,26 @@ class DeviceMovements:
 
     def remove_pin(self, pin):
         self.used_pins.discard(pin)
+
+    # Function to register a button
+    def register_button(self, tag, button):
+        if tag in self.button_registry:
+            print(f"Warning: Button with tag '{tag}' already exists.")
+        else:
+            self.button_registry[tag] = button
+
+    # Function to get a button by its tag
+    def get_button_by_tag(self, tag):
+        return self.button_registry.get(tag)
+    
+    # Function to register a button
+    def register_motor(self, tag, motor):
+        if tag in self.motor_registry:
+            print(f"Warning: Motor with tag '{tag}' already exists.")
+        else:
+            self.motor_registry[tag] = motor
+
+    # Function to get a button by its tag
+    def get_motor_by_tag(self, tag):
+        return self.motor_registry.get(tag)
+

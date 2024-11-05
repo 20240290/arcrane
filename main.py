@@ -163,14 +163,19 @@ def initializeMovements():
                                          movements = {
                                              'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
                                              'motors': [{
-                                                 'step': const.M2_STEP_PIN, 
-                                                 'drive': const.M2_DIR_PIN, 
+                                                 'step': const.M1_STEP_PIN, 
+                                                 'drive': const.M1_DIR_PIN, 
                                                  'direction': True, 
-                                                 'movement': 'up'}]},
+                                                 'movement': 'up'}, {
+                                                 'step': const.M3_STEP_PIN, 
+                                                 'drive': const.M3_DIR_PIN, 
+                                                 'direction': True, 
+                                                 'movement': 'down'}]},
                                          pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
    # movement2.setUpMovements()
    # movement2.monitorMovements()
     movement2.configureMovement()
+    movement2.monitorMovements()
 
     # movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[{'right': 21}], direction_forward=True)
     # movement3.setUpMovements()
