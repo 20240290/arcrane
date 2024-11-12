@@ -29,7 +29,23 @@ from gpiozero import OutputDevice
 from time import sleep
 
         
-app = Flask(__name__)
+
+# def configure_app(app):
+#     print("configure_app called...")
+#     initializeMovements()
+#     #initializeI2c()
+
+#app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    #configure_app(app)
+    # Initialization tasks
+    print("App is being initialized...")
+    return app
+
+
+app = create_app()
+
 utility = Utilities.Utilities()
 
 logging.basicConfig(level=logging.DEBUG)
@@ -135,7 +151,6 @@ def run_script():
 @app.route('/long_press/<direction>', methods=['POST'])
 def long_press(direction):
     # Handle the long-press action here
-    #return jsonify(message="Long press action triggered!")
     print(f"Joystick moved: {direction}")
     
     if direction == 'up':
@@ -155,10 +170,7 @@ def long_press(direction):
 
 
 def initializeMovements():
-    # movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[{'down': 18}], direction_forward=True)
-    # movement1.setUpMovements()
-    # movement1.monitorMovements()
-    movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, 
+    joystick1 = movement.DeviceMovements(step=const.M2_STEP_PIN, 
                                          drive=const.M2_DIR_PIN, 
                                          movements = {
                                              'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
@@ -172,14 +184,8 @@ def initializeMovements():
                                                  'direction': True, 
                                                  'movement': 'down'}]},
                                          pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
-   # movement2.setUpMovements()
-   # movement2.monitorMovements()
-    movement2.configureMovement()
-    movement2.monitorMovements()
-
-    # movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[{'right': 21}], direction_forward=True)
-    # movement3.setUpMovements()
-    # movement3.monitorMovements()
+    joystick1.configureMovement()
+    joystick1.monitorMovements()
 
 def initializeI2c():
     import smbus
@@ -202,12 +208,9 @@ def initializeI2c():
 
 if __name__ == '__main__':
     try:
-        #app.run(debug=True) 
-        initializeMovements()
-        #initializeI2c()
-        
+        #app.run(debug=True)
+        initializeMovements() 
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
         print("clean up")
-

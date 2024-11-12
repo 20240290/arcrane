@@ -23,7 +23,6 @@ from classes.CustomButton import CustomButton
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    motors = {}
     movements = {}
     down_movement: CustomButton
     up_movement: CustomButton
