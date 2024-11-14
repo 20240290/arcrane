@@ -71,39 +71,43 @@ class DeviceMovements:
     def monitorMovements(self):
        print(f"self.movements : {self.movements}")
        while True:
+           if self.down_movement.is_active:
+                #self.motor.rotate_motor()
+                down_motor: PWMStepperMotor = self.get_motor_by_tag(self.down_movement.tag)
+                down_motor.rotate_motor()
+           elif self.right_movement.is_active:
+                #self.motor.rotate_motor()
+                right_motor: PWMStepperMotor = self.get_motor_by_tag(self.right_movement.tag)
+                right_motor.rotate_motor()
+           elif self.up_movement.is_active:
+                #self.motor.rotate_motor()
+                up_motor: PWMStepperMotor = self.get_motor_by_tag(self.up_movement.tag)
+                up_motor.rotate_motor()
+           elif self.left_movement.is_active:
+               #self.motor.rotate_motor()
+               left_motor: PWMStepperMotor = self.get_motor_by_tag(self.right_movement.tag)
+               left_motor.rotate_motor()
+        # while True:
         #    if self.down_movement.is_active:
-        #         #self.motor.rotate_motor()
         #         down_motor: PWMStepperMotor = self.get_motor_by_tag(self.down_movement.tag)
         #         down_motor.rotate_motor()
         #    elif self.right_movement.is_active:
         #         self.motor.rotate_motor()
         #    elif self.up_movement.is_active:
-        #         #self.motor.rotate_motor()
-        #         up_motor: PWMStepperMotor = self.get_motor_by_tag(self.up_movement.tag)
-        #         up_motor.rotate_motor()
+        #         _motors = self.get_motor_by_tag(self.up_movement.tag)
+        #         if len(_motors) > 1:
+        #             #have to manually check the motors added minimum of 2 motors  
+        #             if self.valid_index(_motors, 0):
+        #                 motor1: PWMStepperMotor = _motors[0]
+        #                 motor1.rotate_motor()
+        #             if self.valid_index(_motors, 1):
+        #                 motor2: PWMStepperMotor = _motors[1]
+        #                 motor2.rotate_motor()    
+        #         else:
+        #             up_motor: PWMStepperMotor = _motors[0]
+        #             up_motor.rotate_motor()    
         #    elif self.left_movement.is_active:
-        #        self.motor.rotate_motor()
-        while True:
-           if self.down_movement.is_active:
-                down_motor: PWMStepperMotor = self.get_motor_by_tag(self.down_movement.tag)
-                down_motor.rotate_motor()
-           elif self.right_movement.is_active:
-                self.motor.rotate_motor()
-           elif self.up_movement.is_active:
-                _motors = self.get_motor_by_tag(self.up_movement.tag)
-                if len(_motors) > 1:
-                    #have to manually check the motors added minimum of 2 motors  
-                    if self.valid_index(_motors, 0):
-                        motor1: PWMStepperMotor = _motors[0]
-                        motor1.rotate_motor()
-                    if self.valid_index(_motors, 1):
-                        motor2: PWMStepperMotor = _motors[1]
-                        motor2.rotate_motor()    
-                else:
-                    up_motor: PWMStepperMotor = _motors[0]
-                    up_motor.rotate_motor()    
-           elif self.left_movement.is_active:
-               self.motor.rotate_motor()                       
+        #        self.motor.rotate_motor()                       
                 
     def configureMovement(self):
         if "pins" in self.movements:
@@ -116,19 +120,19 @@ class DeviceMovements:
             motors = self.movements.get('motors')
             for item in motors:
                 print(f"motors : {item.get('step')}")
-                # self.register_motor(item.get('movement'), PWMStepperMotor(item.get('step'), 
-                #                                                           item.get('drive'),
-                #                                                           item.get('direction')))
+                self.register_motor(item.get('movement'), PWMStepperMotor(item.get('step'), 
+                                                                          item.get('drive'),
+                                                                          item.get('direction')))
                 # this code needs to be tested
-                if item.get('movement') in self.motor_registry:
-                    _motors = self.motor_registry.get(item.get('movement'))
-                    _motors+= PWMStepperMotor(item.get('step'), 
-                                              item.get('drive'),
-                                              item.get('direction'))
-                else:    
-                    self.register_motor(item.get('movement'), [PWMStepperMotor(item.get('step'), 
-                                                                              item.get('drive'),
-                                                                              item.get('direction'))])
+                # if item.get('movement') in self.motor_registry:
+                #     _motors = self.motor_registry.get(item.get('movement'))
+                #     _motors += PWMStepperMotor(item.get('step'), 
+                #                               item.get('drive'),
+                #                               item.get('direction'))
+                # else:    
+                #     self.register_motor(item.get('movement'), [PWMStepperMotor(item.get('step'), 
+                #                                                               item.get('drive'),
+                #                                                               item.get('direction'))])
     def setDeviceOutput(self, motors: list):
         """ Set Device Output """
         for item in motors:

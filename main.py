@@ -22,6 +22,7 @@ import constants as const
 import logging
 import arcrane
 import classes.DeviceMovements as movement
+import arcrane
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import Utilities
@@ -144,7 +145,8 @@ def long_press(direction):
 
 if __name__ == '__main__':
     try:
-        app.run()
+        #--stagapp.run()
+        arcrane.initialize()
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

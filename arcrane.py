@@ -32,14 +32,14 @@ def setUpMovements():
                                          movements = {
                                              'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
                                              'motors': [{
-                                                 'step': const.M1_STEP_PIN, 
-                                                 'drive': const.M1_DIR_PIN, 
+                                                 'step': const.M4_STEP_PIN, 
+                                                 'drive': const.M4_DIR_PIN, 
                                                  'direction': True, 
                                                  'movement': 'up'}, {
                                                  'step': const.M3_STEP_PIN, 
                                                  'drive': const.M3_DIR_PIN, 
                                                  'direction': True, 
-                                                 'movement': 'down'}]},
+                                                 'movement': 'right'}, ]},
                                          pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
     joystick1.configureMovement()
     joystick1.monitorMovements()
