@@ -41,7 +41,6 @@ class PWMStepperMotor():
         self.step = step
         self.drive = drive
         self.direction_forward = direction_forward
-        #self.setMotor(step=step, drive=drive, direction_forward=direction_forward)
     
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """

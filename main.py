@@ -20,15 +20,16 @@ import shutil
 from pathlib import Path
 import constants as const
 import logging
+import arcrane
+import classes.DeviceMovements as movement
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import Utilities
-import classes.DeviceMovements as movement
-import curses
-from gpiozero import OutputDevice
-from time import sleep
 
-        
+
+utility = Utilities.Utilities()
+
+logging.basicConfig(level=logging.DEBUG)
 
 # def configure_app(app):
 #     print("configure_app called...")
@@ -36,52 +37,24 @@ from time import sleep
 #     #initializeI2c()
 
 #app = Flask(__name__)
-def create_app():
-    app = Flask(__name__)
-    #configure_app(app)
-    # Initialization tasks
-    print("App is being initialized...")
-    return app
+# def create_app():
+#     app = Flask(__name__)
+#     #configure_app(app)
+#     # Initialization tasks
+#     print("App is being initialized...")
+#     return app
 
 
-app = create_app()
-
-utility = Utilities.Utilities()
-
-logging.basicConfig(level=logging.DEBUG)
-
-# utility.clearGPIOPin(const.M1_STEP_PIN)
-# utility.clearGPIOPin(const.M2_STEP_PIN)
-
-# utility.clearGPIOPin(const.M1_DIR_PIN)
-# utility.clearGPIOPin(const.M2_DIR_PIN)
-
-# utility.clearGPIOPin(const.M3_STEP_PIN)
-# utility.clearGPIOPin(const.M4_STEP_PIN)
-
-# movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
-# movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
-# movement1.setDeviceOutput()
-# movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
-# movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
+# app = create_app()
 
 
-# motor1_step = OutputDevice(const.M1_STEP_PIN)
-# motor1_dir = OutputDevice(const.M1_DIR_PIN)
+def init_app():
+    # Initialization tasks (database connection, config, etc.)
+    print("Performing startup initialization tasks...")
 
-# OutputDevice.close(motor1_step)
+app = Flask(__name__)
 
-# motor2_step = OutputDevice(const.M2_STEP_PIN)
-# motor2_dir = OutputDevice(const.M2_DIR_PIN)
-
-# def rotate_motor(step_pin, dir_pin, direction_forward=True):
-#     """Rotate the specified motor one step."""
-#     dir_pin.value = direction_forward
-#     step_pin.on()
-#     sleep(const.STEP_DELAY)
-#     step_pin.off()
-#     sleep(const.STEP_DELAY)
-
+init_app()  # Call the initialization function here
 
 @app.route("/")
 def index():
@@ -108,6 +81,7 @@ def configuration():
         }
         
         utility.save_configuration(data)
+        #call the module to configure the crane movements and devices.
         
         return redirect(url_for('configuration'))
     return render_template("configuration.html",  config=utility.config['Settings'])
@@ -168,48 +142,9 @@ def long_press(direction):
 
     return jsonify({'status': 'success', 'direction': direction})
 
-
-def initializeMovements():
-    joystick1 = movement.DeviceMovements(step=const.M2_STEP_PIN, 
-                                         drive=const.M2_DIR_PIN, 
-                                         movements = {
-                                             'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
-                                             'motors': [{
-                                                 'step': const.M1_STEP_PIN, 
-                                                 'drive': const.M1_DIR_PIN, 
-                                                 'direction': True, 
-                                                 'movement': 'up'}, {
-                                                 'step': const.M3_STEP_PIN, 
-                                                 'drive': const.M3_DIR_PIN, 
-                                                 'direction': True, 
-                                                 'movement': 'down'}]},
-                                         pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
-    joystick1.configureMovement()
-    joystick1.monitorMovements()
-
-def initializeI2c():
-    import smbus
-    import time
-
-    # Create an SMBus instance
-    bus = smbus.SMBus(1)  # Use 1 for Raspberry Pi (newer models)
-
-    SLAVE_ADDRESS = 0x04  # Replace with the actual address of the slave
-
-    try:
-        while True:
-            # Send data
-            data = [0x01, 0x02, 0x03]  # Example data
-            bus.write_i2c_block_data(SLAVE_ADDRESS, 0, data)
-            print("Sent:", data)
-            time.sleep(1)  # Send every second
-    except KeyboardInterrupt:
-        pass    
-
 if __name__ == '__main__':
     try:
-        #app.run(debug=True)
-        initializeMovements() 
+        app.run()
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

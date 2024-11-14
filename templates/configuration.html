@@ -1,81 +1,106 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div class="jumbotron">
+  <div class="jumbotron" style="padding: 10px">
     <form method="POST">
-      <header class="mt-4">
-        <h1 class="text-left">Configuration Settings</h1>
+      <header class="mt-1">
+        <h1 class="text-left header-text">Configuration Settings</h1>
       </header>
       <!-- <label for="rotation_speed">Rotaion Speed:</label>
       <input type="text" id="ROTATION" name="ROTATION" value="{{ config['ROTATION'] }}"><br> -->
-      <div class="form-group">
-        <label for="rotation_speed">Steps Per Revolution:</label>
-        <input type="text" id="STEPS_PER_REVOLUTION" name="STEPS_PER_REVOLUTION" value="{{ config['STEPS_PER_REVOLUTION'] }}">
-       </div>
+      <div class="pin-container">
+        <div class="form-group">
+          <div class="group-field ">
+            <label for="rotation_speed">Steps Per Revolution:</label>
+            <input type="text" id="STEPS_PER_REVOLUTION" name="STEPS_PER_REVOLUTION" value="{{ config['STEPS_PER_REVOLUTION'] }}" class="text-input">
+          </div>
+          <div class="group-field ">
+            <label for="rotation_speed">Degrees Per Step:</label>
+            <input type="text" id="DEGREES_PER_STEP" name="DEGREES_PER_STEP" value="{{ config['DEGREES_PER_STEP'] }}" class="text-input">
+          </div>
+          <div class="group-field ">
+            <label for="rotation_speed">Steps Per 90 degrees:</label>
+            <input type="text" id="STEPS_PER_90_DEGREES" name="STEPS_PER_90_DEGREES" value="{{ config['STEPS_PER_90_DEGREES'] }}" class="text-input">
+          </div>
+          <div class="group-field ">
+            <label for="rotation_speed">Steps Delay:</label>
+            <input type="text" id="STEP_DELAY" name="STEP_DELAY" value="{{ config['STEP_DELAY'] }}" class="text-input">
+          </div>
+         </div>
+      </div>
       
-      <div class="form-group">
-         <label for="rotation_speed">Degrees Per Step:</label>
-        <input type="text" id="DEGREES_PER_STEP" name="DEGREES_PER_STEP" value="{{ config['DEGREES_PER_STEP'] }}"><br>
-      </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">Steps Per 90 degrees:</label>
-        <input type="text" id="STEPS_PER_90_DEGREES" name="STEPS_PER_90_DEGREES" value="{{ config['STEPS_PER_90_DEGREES'] }}"><br>
-      </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">Steps Delay:</label>
-        <input type="text" id="STEP_DELAY" name="STEP_DELAY" value="{{ config['STEP_DELAY'] }}"><br>
-      </div>
-
-      <!-- <header class="mt-4">
-        <h1 class="text-left">PIN Settings</h1>
+      <header class="mt-1">
+        <h1 class="text-left header-text">Devices PIN Settings</h1>
       </header>
-      <br />
+      <div class="pin-container">
+        <label for="rotation_speed">Crane Movement Joystick</label>
+        <div class="form-group">
+          <div class="group-field ">
+            <label for="rotation_speed">Forward | GND</label>
+            <input type="text" id="J1_UP_PIN" name="J1_UP_PIN" value="{{ config['J1_UP_PIN'] }}" placeholder="PIN" class="text-input">
+            <input type="text" id="J1_UP_GND_PIN" name="J1_UP_GND_PIN" value="{{ config['J1_UP_GND_PIN'] }}" placeholder="GND" class="text-input">
+          </div>
+          
+          <div class="group-field ">
+            <label for="rotation_speed">Backward | GND</label>
+            <input type="text" id="J1_BACK_PIN" name="J1_BACK_PIN" value="{{ config['J1_BACK_PIN'] }}" placeholder="PIN" class="text-input">
+            <input type="text" id="J1_BACK_GND_PIN" name="J1_BACK_GND_PIN" value="{{ config['J1_BACK_GND_PIN'] }}" placeholder="GND" class="text-input">
+          </div>
+          <div class="group-field ">
+            <label for="rotation_speed">Left | GND</label>
+            <input type="text" id="J1_LEFT_PIN" name="J1_LEFT_PIN" value="{{ config['J1_LEFT_PIN'] }}" placeholder="PIN" class="text-input">
+            <input type="text" id="J1_LEFT_GND_PIN" name="J1_LEFT_GND_PIN" value="{{ config['J1_LEFT_GND_PIN'] }}" placeholder="GND" class="text-input">
+          </div>
+          <div class="group-field ">
+            <label for="rotation_speed">Right | GND</label>
+            <input type="text" id="J1_RIGHT_PIN" name="J1_RIGHT_PIN" value="{{ config['J1_RIGHT_PIN'] }}" placeholder="PIN" class="text-input">
+            <input type="text" id="J1_RIGHT_GND_PIN" name="J1_RIGHT_GND_PIN" value="{{ config['J1_RIGHT_GND_PIN'] }}" placeholder="GND" class="text-input">
+          </div>
+        </div>
+        
+      <div class="pin-container">
+        <label for="rotation_speed">Motor Settings</label>
+        <div class="legend">
+          <i>Directions = Joystick Movement</i>
+          <p><i>
+            Up | Down | Left | Right 
+          </i></p>
+        </div>
+        <div class="form-group ">
+            <div class="group-field">
+              <label for="rotation_speed">M1 Step | Drive | Movement:</label>
+              <input type="text" id="M1_STEP_PIN" name="M1_STEP_PIN" value="{{ config['M1_STEP_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" class="text-input" id="M1_DIR_PIN" name="M1_DIR_PIN" value="{{ config['M1_DIR_PIN'] }}" placeholder="PIN">
+              <input type="text" class="text-input" id="M1_MOVEMENT" name="M1_MOVEMENT" value="{{ config['M1_MOVEMENT'] }}" placeholder="Direction">
+            </div>
+      
+            <div class="group-field">
+              <label for="rotation_speed">M2 Step | Drive | Movement:</label>
+              <input type="text" id="M2_STEP_PIN" name="M2_STEP_PIN" value="{{ config['M2_STEP_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" id="M2_DIR_PIN" name="M2_DIR_PIN" value="{{ config['M2_DIR_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" class="text-input" id="M2_MOVEMENT" name="M2_MOVEMENT" value="{{ config['M2_MOVEMENT'] }}" placeholder="Direction">
+            </div>
+      
+            <div class="group-field">
+              <label for="rotation_speed">M3 Step | Drive | Movement:</label>
+              <input type="text" id="M3_STEP_PIN" name="M3_STEP_PIN" value="{{ config['M3_STEP_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" id="M3_DIR_PIN" name="M3_DIR_PIN" value="{{ config['M3_DIR_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" class="text-input" id="M3_MOVEMENT" name="M3_MOVEMENT" value="{{ config['M3_MOVEMENT'] }}" placeholder="Direction">
+            </div>
 
-      <div class="form-group">
-        <label for="rotation_speed">M1 Step Pin:</label>
-        <input type="text" id="M1_STEP_PIN" name="M1_STEP_PIN" value="{{ config['M1_STEP_PIN'] }}"><br>
+            <div class="group-field">
+              <label for="rotation_speed">M4 Step | Drive | Movement:</label>
+              <input type="text" id="M4_STEP_PIN" name="M4_STEP_PIN" value="{{ config['M4_STEP_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" id="M4_DIR_PIN" name="M4_DIR_PIN" value="{{ config['M4_DIR_PIN'] }}" placeholder="PIN" class="text-input">
+              <input type="text" class="text-input" id="M4_MOVEMENT" name="M4_MOVEMENT" value="{{ config['M4_MOVEMENT'] }}" placeholder="Direction">
+            </div>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">M1 Direction Pin:</label>
-        <input type="text" id="M1_DIR_PIN" name="M1_DIR_PIN" value="{{ config['M1_DIR_PIN'] }}"><br><br>
-      </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">M2 Step Pin:</label>
-        <input type="text" id="M2_STEP_PIN" name="M2_STEP_PIN" value="{{ config['M2_STEP_PIN'] }}"><br>
-      </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">M2 Direction Pin:</label>
-        <input type="text" id="M2_DIR_PIN" name="M2_DIR_PIN" value="{{ config['M2_DIR_PIN'] }}"><br><br>
-      </div>
-
-      <div class="form-group">
-        <label for="rotation_speed">M3 Step Pin:</label>
-        <input type="text" id="M3_STEP_PIN" name="M3_STEP_PIN" value="{{ config['M3_STEP_PIN'] }}"><br>
-     </div>
-
-     <div class="form-group">
-        <label for="rotation_speed">M3 Direction Pin:</label>
-        <input type="text" id="M3_DIR_PIN" name="M3_DIR_PIN" value="{{ config['M3_DIR_PIN'] }}"><br><br>
-     </div>
-
-     <div class="form-group">
-        <label for="rotation_speed">M4 Step Pin:</label>
-        <input type="text" id="M4_STEP_PIN" name="M4_STEP_PIN" value="{{ config['M4_STEP_PIN'] }}"><br>
-    </div>
-
-    <div class="form-group">
-        <label for="rotation_speed">M4 Direction Pin:</label>
-        <input type="text" id="M4_DIR_PIN" name="M4_DIR_PIN" value="{{ config['M4_DIR_PIN'] }}"><br><br>
-    </div> -->
-
-      <input type="submit" value="Save" style="width: 30%;">
-      <!-- <button id="defaultSettings" onclick="loadDefaultConfig()">Default Settings</button> -->
+      
+      <input type="submit" value="Save" class="text-button">
+      <button id="defaultSettings" onclick="loadDefaultConfig()" class="text-button">Default Settings</button>
   </form>
+  <br />
   </div>
   <script>
     $(document).ready(function() {
