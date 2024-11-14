@@ -14,29 +14,11 @@
  limitations under the License.
  """
 
+from enum import Enum
 
-#Constants Declaration
-DEFAULT_ANGLE = 120
-DEFAULT_ROTATION = 360
-STEPS_PER_REVOLUTION = 200  # Assuming 200 steps for 1 full revolution (adjust if needed)
-DEGREES_PER_STEP = DEFAULT_ROTATION / STEPS_PER_REVOLUTION
-STEPS_PER_90_DEGREES = int(90 / DEGREES_PER_STEP)
-STEP_DELAY = 0.001
-SERVO_DELAY = 1
-SERVO_POSITION = 1
-
-# Pin setup for Motor 1
-M1_STEP_PIN = 17
-M1_DIR_PIN = 27
-
-# Pin setup for Motor 2
-M2_STEP_PIN = 22
-M2_DIR_PIN = 23
-
-# Pin setup for Motor 3
-M3_STEP_PIN = 5
-M3_DIR_PIN = 6
-
-# Pin setup for Motor 4
-M4_STEP_PIN = 12
-M4_DIR_PIN = 13
+class DeviceType(Enum):
+    STEPPER = 1
+    SERVO = 2
+    SWITCH = 3
+    
+    
