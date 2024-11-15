@@ -22,9 +22,11 @@ import constants as const
 class PWMStepperMotor():
     motor_step: OutputDevice
     motor_dir: OutputDevice
+    reversable: bool
+    reverse_movement: str
     
     #add a tag to the motor
-    def __init__(self, step: int, drive: int, direction_forward=True):
+    def __init__(self, step: int, drive: int, direction_forward=True, reversable=False, reverse_movement = ''):
         """
         Default Class initializer with that accepts the Output device pin.
 
@@ -41,6 +43,8 @@ class PWMStepperMotor():
         self.step = step
         self.drive = drive
         self.direction_forward = direction_forward
+        self.reversable = reversable
+        self.reverse_movement = reverse_movement
     
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """
@@ -78,6 +82,30 @@ class PWMStepperMotor():
         """
         """"""
         self.motor_dir.value = self.direction_forward
+        self.motor_step.on()
+        sleep(const.STEP_DELAY)
+        self.motor_step.off()
+        sleep(const.STEP_DELAY)
+        # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
+        #     drive.value = self.direction_forward
+        #     device.on()
+        #     sleep(const.STEP_DELAY)
+        #     device.off()
+
+    def rotate_motor2(self, direction):
+        """
+        Rotate the specified motor one step.
+
+        Parameters:
+        -----------
+        None
+
+        Return:
+        -------
+        None
+        """
+        """"""
+        self.motor_dir.value = direction
         self.motor_step.on()
         sleep(const.STEP_DELAY)
         self.motor_step.off()

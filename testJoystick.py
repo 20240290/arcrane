@@ -1,4 +1,6 @@
 from classes.CustomButton import CustomButton
+from classes.PWMStepperMotor import PWMStepperMotor
+import constants as const
 class PWMStepperMotorTest():
 
     #add a tag to the motor
@@ -56,16 +58,20 @@ class PWMStepperMotorTest():
 
 pins = [{'down': 18, 'right': 21, 'up': 26, 'left': 20, 'trigger': 13, 'fire': 19}]
 movements = {
-            'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20}, 
+            'pins': {'down': 18, 'right': 21, 'up': 26, 'left': 20, 'trigger': 13, 'fire': 19}, 
             'motors': [{
-                'step': 1, 
-                'drive': 2, 
-                'direction': True, 
+                'step': const.M1_STEP_PIN, 
+                'drive': const.M1_DIR_PIN, 
+                'direction': True,
+                'reversable': True, 
+                'reverse_movement': 'down',
                 'movement': 'up'}, {
-                'step': 3, 
-                'drive': 4, 
+                'step': const.M2_STEP_PIN, 
+                'drive': const.M2_DIR_PIN, 
                 'direction': True, 
-                'movement': 'up'}]}
+                'movement': 'right',
+                'reverse_movement': '', 
+                'reversable': False,}]}
 
 down_movement: CustomButton = CustomButton(18, tag='down', pull_up=True)
 up_movement: CustomButton = CustomButton(26, tag='up', pull_up=True)
@@ -77,6 +83,7 @@ fire_movement: CustomButton = CustomButton(19, tag='fire', pull_up=True)
 directional_movements = []
 button_registry = {}
 motor_registry = {}
+lastMotorRotation = True
 
 # Function to register a button
 def register_button(tag, button):
@@ -133,36 +140,38 @@ def monitorMovements():
     print(f"self.movements : {movements}")
     while True:
        if down_movement.is_active:
-            print(f"check down movement: {get_motor_by_tag(down_movement.tag)}")
+            #print(f"check down movement: {get_motor_by_tag(down_movement.tag)}")
             if get_motor_by_tag(down_movement.tag) != None:
-                down_motor: PWMStepperMotorTest = get_motor_by_tag(down_movement.tag)
-                down_motor.rotate_motor(down_movement.tag)
+                down_motor: PWMStepperMotor = get_motor_by_tag(down_movement.tag)
+                down_motor.rotate_motor2(False)
        elif right_movement.is_active:
             if get_motor_by_tag(right_movement.tag) != None:
-                right_motor: PWMStepperMotorTest = get_motor_by_tag(right_movement.tag)
-                right_motor.rotate_motor(right_movement.tag)
+                right_motor: PWMStepperMotor = get_motor_by_tag(right_movement.tag)
+                right_motor.rotate_motor2(True)
        elif up_movement.is_active:
              if get_motor_by_tag(up_movement.tag) != None:
                 _motors = get_motor_by_tag(up_movement.tag)
                 if len(_motors) > 1:
                     #have to manually check the motors added minimum of 2 motors  
                     if valid_index(_motors, 0):
-                        motor1: PWMStepperMotorTest = _motors[0]
-                        motor1.rotate_motor(up_movement.tag)
+                        motor1: PWMStepperMotor = _motors[0]
+                        motor1.rotate_motor2(True)
                     if valid_index(_motors, 1):
-                        motor2: PWMStepperMotorTest = _motors[1]
-                        motor2.rotate_motor(up_movement.tag)    
+                        motor2: PWMStepperMotor = _motors[1]
+                        motor2.rotate_motor2(False)    
                 else:
-                    up_motor: PWMStepperMotorTest = _motors[0]
-                    up_motor.rotate_motor(up_movement.tag)    
+                    up_motor: PWMStepperMotor = _motors[0]
+                    up_motor.rotate_motor2(lastMotorRotation)    
        elif left_movement.is_active:
            if get_motor_by_tag(left_movement.tag) != None:
-                left_motor: PWMStepperMotorTest = get_motor_by_tag(left_movement.tag)
-                left_motor.rotate_motor(left_movement.tag)  
+                left_motor: PWMStepperMotor = get_motor_by_tag(left_movement.tag)
+                left_motor.rotate_motor2(True)  
        elif trigger_movement.is_active:
-            print(f"pingiw pingiw bang bang ") 
+            pass
+            #print(f"pingiw pingiw bang bang ") 
        elif fire_movement.is_active:
-            print(f"fire in the hole")                        
+            pass
+            #print(f"fire in the hole")                        
             
 def configureMovement():
     if "motors" in movements:
@@ -173,13 +182,23 @@ def configureMovement():
             if item.get('movement') in motor_registry:
                 _motors = motor_registry.get(item.get('movement'))
                 print(f"motors movement: {_motors }")
-                _motors.append(PWMStepperMotorTest(item.get('step'), 
+                _motors.append(PWMStepperMotor(item.get('step'), 
                                           item.get('drive'),
-                                          item.get('direction')))
-            else:    
-                register_motor(item.get('movement'), [PWMStepperMotorTest(item.get('step'), 
+                                          item.get('direction'), 
+                                          item.get('reversable'), 
+                                          item.get('reverse_movement')))
+            else:
+                print(f"reversable motors : {item}") 
+                if item.get('reversable'): 
+                    print(f"motor is reversable: {item.get('movement')}")
+                else:
+                   print(f"motor is not reversable: {item.get('movement')}")     
+
+                register_motor(item.get('movement'), [PWMStepperMotor(item.get('step'), 
                                                                           item.get('drive'),
-                                                                          item.get('direction'))])
+                                                                          item.get('direction'), 
+                                                                          item.get('reversable'), 
+                                                                          item.get('reverse_movement'))])
 
 configureMovement()
 monitorMovements()            

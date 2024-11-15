@@ -39,7 +39,7 @@ def setUpMovements():
                                                  'step': const.M3_STEP_PIN, 
                                                  'drive': const.M3_DIR_PIN, 
                                                  'direction': True, 
-                                                 'movement': 'right'}, ]},
+                                                 'movement': 'up'}, ]},
                                          pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
     joystick1.configureMovement()
     joystick1.monitorMovements()
