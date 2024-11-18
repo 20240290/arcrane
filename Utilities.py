@@ -37,24 +37,37 @@ class Utilities:
     #save configuration files
     def save_configuration(self, params):
         self.config.read('config.ini')  
-        self.config['Settings']['STEPS_PER_REVOLUTION'] = params['STEPS_PER_REVOLUTION']
-        self.config['Settings']['DEGREES_PER_STEP'] = params['DEGREES_PER_STEP']
-        self.config['Settings']['STEPS_PER_90_DEGREES'] = params['STEPS_PER_90_DEGREES']
-        self.config['Settings']['STEP_DELAY'] = params['STEP_DELAY']
-        self.config['Settings']['M1_STEP_PIN'] = params['M1_STEP_PIN']
-        self.config['Settings']['M1_DIR_PIN'] = params['M1_DIR_PIN']
-        self.config['Settings']['M2_STEP_PIN'] = params['M2_STEP_PIN']
-        self.config['Settings']['M2_DIR_PIN'] = params['M2_DIR_PIN']
-        self.config['Settings']['M3_STEP_PIN'] = params['M3_STEP_PIN']
-        self.config['Settings']['M3_DIR_PIN'] = params['M3_DIR_PIN']
-        self.config['Settings']['M4_STEP_PIN'] = params['M4_STEP_PIN']
-        self.config['Settings']['M4_DIR_PIN'] = params['M4_DIR_PIN']
+        self.config['Settings']['steps_per_revolution'] = params['steps_per_revolution']
+        self.config['Settings']['degrees_per_step'] = params['degrees_per_step']
+        self.config['Settings']['steps_per_90_degrees'] = params['steps_per_90_degrees']
+        self.config['Settings']['step_delay'] = params['step_delay']
+        self.config['Settings']['m1_step_pin'] = params['m1_step_pin']
+        self.config['Settings']['m1_dir_pin'] = params['m1_dir_pin']
+        self.config['Settings']['m1_movement'] = params['m1_movement']
+        self.config['Settings']['m1_reversible'] = params['m1_reversible']
+        self.config['Settings']['m1_reverse_movement'] = params['m1_reverse_movement']
+        self.config['Settings']['m2_step_pin'] = params['m2_step_pin']
+        self.config['Settings']['m2_dir_pin'] = params['m2_dir_pin']
+        self.config['Settings']['m2_movement'] = params['m2_movement']
+        self.config['Settings']['m2_reversible'] = params['m2_reversible']
+        self.config['Settings']['m2_reverse_movement'] = params['m2_reverse_movement']
+        self.config['Settings']['m3_step_pin'] = params['m3_step_pin']
+        self.config['Settings']['m3_dir_pin'] = params['m3_dir_pin']
+        self.config['Settings']['m3_movement'] = params['m3_movement']
+        self.config['Settings']['m3_reversible'] = params['m3_reversible']
+        self.config['Settings']['m3_reverse_movement'] = params['m3_reverse_movement']
+        self.config['Settings']['m4_step_pin'] = params['m4_step_pin']
+        self.config['Settings']['m4_dir_pin'] = params['m4_dir_pin']
+        self.config['Settings']['m4_movement'] = params['m4_movement']
+        self.config['Settings']['m4_reversible'] = params['m4_reversible']
+        self.config['Settings']['m4_reverse_movement'] = params['m4_reverse_movement']
 
         #write to configuration file
         with open('config.ini', 'w') as configfile:
             self.config.write(configfile) 
         return self.config['Settings']  
     
+    #get configuration settings
     def get_configuration(self, param):
         self.config.read('config.ini')
         val = self.config["Settings"][param]
@@ -62,27 +75,28 @@ class Utilities:
         print(f"get config: {val}")
         return self.config["Settings"][param]
 
-
+    #load default configurations
     def loadDefaultConfiguration(self):
         self.config.read('config.ini')
         with open('config.ini', 'r') as file:
             self.config = json.load({"SETTINGS": {
-               "STEPS_PER_REVOLUTION": const.STEPS_PER_REVOLUTION,
-               "DEGREES_PER_STEP":  const.DEGREES_PER_STEP,
-                "STEPS_PER_90_DEGREES": const.STEPS_PER_90_DEGREES,
-                "STEP_DELAY": const.STEP_DELAY,
-                "M1_STEP_PIN": const.M1_STEP_PIN,
-                "M1_DIR_PIN": const.M1_DIR_PIN,
-                "M2_STEP_PIN": const.M2_STEP_PIN,
-                "M2_DIR_PIN": const.M2_DIR_PIN,
-                "M3_STEP_PIN": const.M3_STEP_PIN,
-                "M3_DIR_PIN": const.M3_DIR_PIN,
-                "M4_STEP_PIN": const.M4_STEP_PIN,
-                "M4_DIR_PIN": const.M4_DIR_PIN
+               "steps_per_revolution": const.STEPS_PER_REVOLUTION,
+               "degrees_per_step":  const.DEGREES_PER_STEP,
+                "steps_per_90_degrees": const.STEPS_PER_90_DEGREES,
+                "step_delay": const.STEP_DELAY,
+                "m1_step_pin": const.M1_STEP_PIN,
+                "m1_dir_pin": const.M1_DIR_PIN,
+                "m2_step_pin": const.M2_STEP_PIN,
+                "m2_dir_pin": const.M2_DIR_PIN,
+                "m3_step_pin": const.M3_STEP_PIN,
+                "m3_dir_pin": const.M3_DIR_PIN,
+                "m4_step_pin": const.M4_STEP_PIN,
+                "m4_dir_pin": const.M4_DIR_PIN
             }})
 
             return self.config
 
+    #clear gpio pin
     def clearGPIOPin(self,pin):
         try:
             chip = lgpio.gpiochip_open(0)

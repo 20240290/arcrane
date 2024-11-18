@@ -16,6 +16,7 @@
 from gpiozero import OutputDevice
 from time import sleep
 import constants as const
+import Utilities as utilities
 
 """ Generic Stepper Motor Class """
 
@@ -24,7 +25,9 @@ class PWMStepperMotor():
     motor_dir: OutputDevice
     reversable: bool
     reverse_movement: str
-    
+    utility = utilities.Utilities()
+
+
     #add a tag to the motor
     def __init__(self, step: int, drive: int, direction_forward=True, reversable=False, reverse_movement = ''):
         """
@@ -83,9 +86,9 @@ class PWMStepperMotor():
         """"""
         self.motor_dir.value = self.direction_forward
         self.motor_step.on()
-        sleep(const.STEP_DELAY)
+        sleep(self.utility.get_configuration('step_delay'))
         self.motor_step.off()
-        sleep(const.STEP_DELAY)
+        sleep(self.utility.get_configuration('step_delay'))
         # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
         #     drive.value = self.direction_forward
         #     device.on()
@@ -107,9 +110,9 @@ class PWMStepperMotor():
         """"""
         self.motor_dir.value = direction
         self.motor_step.on()
-        sleep(const.STEP_DELAY)
+        sleep(self.utility.get_configuration('step_delay'))
         self.motor_step.off()
-        sleep(const.STEP_DELAY)
+        sleep(self.utility.get_configuration('step_delay'))
         # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
         #     drive.value = self.direction_forward
         #     device.on()

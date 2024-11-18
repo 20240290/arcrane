@@ -146,7 +146,6 @@ def long_press(direction):
 if __name__ == '__main__':
     try:
         app.run()
-        # arcrane.initialize()
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
