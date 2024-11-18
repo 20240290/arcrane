@@ -55,33 +55,34 @@ def setUpMovements():
                                                       'up': utility.get_configuration('j1_up_pin'), 
                                                       'left': utility.get_configuration('j1_left_pin')}, 
                                              'motors': [{
-                                                        'step': utility.get_configuration('m1_step_pin'), 
-                                                        'drive': utility.get_configuration('m1_drive_pin'), 
-                                                        'direction': True,
-                                                        'reversable': utility.get_configuration('m1_reversible'), 
-                                                        'reverse_movement': utility.get_configuration('m1_reverse_movement'),
-                                                        'movement': utility.get_configuration('m1_movement')},
-                                                        {
-                                                        'step': utility.get_configuration('m2_step_pin'), 
-                                                        'drive': utility.get_configuration('m2_drive_pin'), 
-                                                        'direction': True, 
-                                                        'reversable': utility.get_configuration('m2_reversible'), 
-                                                        'reverse_movement': utility.get_configuration('m2_reverse_movement'),
-                                                        'movement': utility.get_configuration('m2_movement')}, 
-                                                        {
+                                                        # 'step': utility.get_configuration('m1_step_pin'), 
+                                                        # 'drive': utility.get_configuration('m1_drive_pin'), 
+                                                        # 'direction': True,
+                                                        # 'reversable': utility.get_configuration('m1_reversible'), 
+                                                        # 'reverse_movement': utility.get_configuration('m1_reverse_movement'),
+                                                        # 'movement': utility.get_configuration('m1_movement')},
+                                                        # {
+                                                        # 'step': utility.get_configuration('m2_step_pin'), 
+                                                        # 'drive': utility.get_configuration('m2_drive_pin'), 
+                                                        # 'direction': True, 
+                                                        # 'reversable': utility.get_configuration('m2_reversible'), 
+                                                        # 'reverse_movement': utility.get_configuration('m2_reverse_movement'),
+                                                        # 'movement': utility.get_configuration('m2_movement')}, 
+                                                        # {
                                                         'step': utility.get_configuration('m3_step_pin'), 
                                                         'drive': utility.get_configuration('m3_drive_pin'), 
                                                         'direction': True, 
                                                         'reversable': utility.get_configuration('m3_reversible'), 
                                                         'reverse_movement': utility.get_configuration('m3_reverse_movement'),
                                                         'movement': utility.get_configuration('m3_movement')}, 
-                                                        {
-                                                        'step': utility.get_configuration('m4_step_pin'), 
-                                                        'drive': utility.get_configuration('m4_drive_pin'), 
-                                                        'direction': True, 
-                                                        'reversable': utility.get_configuration('m4_reversible'), 
-                                                        'reverse_movement': utility.get_configuration('m4_reverse_movement'),
-                                                        'movement': utility.get_configuration('m4_movement')}]},
+                                                        # {
+                                                        # 'step': utility.get_configuration('m4_step_pin'), 
+                                                        # 'drive': utility.get_configuration('m4_drive_pin'), 
+                                                        # 'direction': True, 
+                                                        # 'reversable': utility.get_configuration('m4_reversible'), 
+                                                        # 'reverse_movement': utility.get_configuration('m4_reverse_movement'),
+                                                        # 'movement': utility.get_configuration('m4_movement')}
+                                                        ]},
                                          pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
     
     

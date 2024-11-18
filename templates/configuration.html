@@ -87,7 +87,7 @@
                                 <td> <input type="text" class="table-text-input" id="M1_DIR_PIN" name="M1_DIR_PIN" value="{{ config['M1_DIR_PIN'] }}" placeholder="PIN"></td>
                                 <td> <input type="text" class="table-text-input" id="M1_MOVEMENT" name="M1_MOVEMENT" value="{{ config['M1_MOVEMENT'] }}" placeholder="Movement"></td>
                                 <td><input type="checkbox" id="M1_REVERSABLE" class="table-text-input"></td>
-                                <td> <input type="text" class="table-text-input" id="M1_MOVEMENT" name="M1_MOVEMENT" value="{{ config['M1_MOVEMENT'] }}" placeholder="Reverse"></td>
+                                <td> <input type="text" class="table-text-input" id="M1_REVERSE_MOVEMENT" name="M1_REVERSE_MOVEMENT" value="{{ config['M1_REVERSE_MOVEMENT'] }}" placeholder="Reverse"></td>
                             </tr>
                             <tr>
                               <td>2</td>
@@ -95,7 +95,7 @@
                               <td> <input type="text" class="table-text-input" id="M2_DIR_PIN" name="M2_DIR_PIN" value="{{ config['M2_DIR_PIN'] }}" placeholder="PIN"></td>
                               <td> <input type="text" class="table-text-input" id="M2_MOVEMENT" name="M2_MOVEMENT" value="{{ config['M2_MOVEMENT'] }}" placeholder="Movement"></td>
                               <td><input type="checkbox" id="M2_REVERSABLE" class="table-text-input"></td>
-                              <td> <input type="text" class="table-text-input" id="M2_MOVEMENT" name="M2_MOVEMENT" value="{{ config['M2_MOVEMENT'] }}" placeholder="Reverse"></td>
+                              <td> <input type="text" class="table-text-input" id="M2_REVERSE_MOVEMENT" name="M2_REVERSE_MOVEMENT" value="{{ config['M2_REVERSE_MOVEMENT'] }}" placeholder="Reverse"></td>
                             </tr>
                             <tr>
                               <td>3</td>
@@ -103,7 +103,7 @@
                               <td> <input type="text" class="table-text-input" id="M3_DIR_PIN" name="M3_DIR_PIN" value="{{ config['M3_DIR_PIN'] }}" placeholder="PIN"></td>
                               <td> <input type="text" class="table-text-input" id="M3_MOVEMENT" name="M3_MOVEMENT" value="{{ config['M3_MOVEMENT'] }}" placeholder="Movement"></td>
                               <td><input type="checkbox" id="M4_REVERSABLE" class="table-text-input"></td>
-                              <td> <input type="text" class="table-text-input" id="M3_MOVEMENT" name="M3_MOVEMENT" value="{{ config['M3_MOVEMENT'] }}" placeholder="Reverse"></td>
+                              <td> <input type="text" class="table-text-input" id="M3_REVERSE_MOVEMENT" name="M3_REVERSE_MOVEMENT" value="{{ config['M3_REVERSE_MOVEMENT'] }}" placeholder="Reverse"></td>
                             </tr>
                             <tr>
                               <td>4</td>
@@ -111,7 +111,7 @@
                               <td> <input type="text" class="table-text-input" id="M4_DIR_PIN" name="M4_DIR_PIN" value="{{ config['M4_DIR_PIN'] }}" placeholder="PIN"></td>
                               <td> <input type="text" class="table-text-input" id="M4_MOVEMENT" name="M4_MOVEMENT" value="{{ config['M4_MOVEMENT'] }}" placeholder="Movement"></td>
                               <td><input type="checkbox" id="M4_REVERSABLE" class="table-text-input"></td>
-                              <td> <input type="text" class="table-text-input" id="M4_MOVEMENT" name="M1_MOVEMENT" value="{{ config['M1_MOVEMENT'] }}" placeholder="Reverse"></td>
+                              <td> <input type="text" class="table-text-input" id="M4_REVERSE_MOVEMENT" name="M4_REVERSE_MOVEMENT" value="{{ config['M4_REVERSE_MOVEMENT'] }}" placeholder="Reverse"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -123,20 +123,28 @@
                 <div class="form-group">
                   <div class="group-field ">
                     <label for="rotation_speed">Up</label>
-                    <input type="text" id="j1_up_pin" name="j1_up_pin" value="{{ config['j1_up_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="j2_up_pin" name="j2_up_pin" value="{{ config['j2_up_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   
                   <div class="group-field ">
                     <label for="rotation_speed">Down</label>
-                    <input type="text" id="j1_down_pin" name="j1_down_pin" value="{{ config['j1_down_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="j2_down_pin" name="j2_down_pin" value="{{ config['j2_down_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   <div class="group-field ">
                     <label for="rotation_speed">Left</label>
-                    <input type="text" id="j1_left_pin" name="j1_left_pin" value="{{ config['j1_left_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="j2_left_pin" name="j2_left_pin" value="{{ config['j2_left_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   <div class="group-field ">
                     <label for="rotation_speed">Right</label>
-                    <input type="text" id="j1_right_pin" name="j1_right_pin" value="{{ config['j1_right_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="j2_right_pin" name="j2_right_pin" value="{{ config['j2_right_pin'] }}" placeholder="PIN" class="text-input">
+                  </div>
+                  <div class="group-field ">
+                    <label for="rotation_speed">Trigger</label>
+                    <input type="text" id="j2_trigger_pin" name="j2_trigger_pin" value="{{ config['j2_trigger_pin'] }}" placeholder="PIN" class="text-input">
+                  </div>
+                  <div class="group-field ">
+                    <label for="rotation_speed">Fire</label>
+                    <input type="text" id="j2_fire_pin" name="j2_fire_pin" value="{{ config['j2_fire_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                 </div>
               </div> 
