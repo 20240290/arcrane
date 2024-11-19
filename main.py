@@ -20,15 +20,16 @@ import shutil
 from pathlib import Path
 import constants as const
 import logging
-import arcrane
 import classes.DeviceMovements as movement
-import arcrane
+import Arcrane as Arcrane
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import Utilities
-
+import Arcrane
 
 utility = Utilities.Utilities()
+arcrane = Arcrane.Arcrane()
+arcrane.initialize()
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -52,6 +53,10 @@ logging.basicConfig(level=logging.DEBUG)
 def init_app():
     # Initialization tasks (database connection, config, etc.)
     print("Performing startup initialization tasks...")
+    if arcrane.joystick1 == None:
+        arcrane.initialize()
+
+    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
 
 app = Flask(__name__)
 
@@ -90,6 +95,7 @@ def configuration():
 
 @app.route("/joystick")
 def joystick():
+    #setup motors from arcrane module
     return render_template("joystick.html")
 
 @app.route('/move_joystick/<direction>')
@@ -128,24 +134,27 @@ def long_press(direction):
     # Handle the long-press action here
     print(f"Joystick moved: {direction}")
     
-    if direction == 'up':
-        movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[], direction_forward=True)
-        movement1.motor.rotate_motor()
-    elif direction == 'down':
-        movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN, pins=[],direction_forward=True)
-        movement2.motor.rotate_motor()    
-    elif direction == 'left':
-        movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[],direction_forward=True)
-        movement3.motor.rotate_motor()
-    elif direction == 'right':
-        movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN, pins=[],direction_forward=True)
-        movement4.motor.rotate_motor()
+    # if direction == 'up':
+    #     movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[], direction_forward=True)
+    #     movement1.motor.rotate_motor()
+    # elif direction == 'down':
+    #     movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN, pins=[],direction_forward=True)
+    #     movement2.motor.rotate_motor()    
+    # elif direction == 'left':
+    #     movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[],direction_forward=True)
+    #     movement3.motor.rotate_motor()
+    # elif direction == 'right':
+    #     movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN, pins=[],direction_forward=True)
+    #     movement4.motor.rotate_motor()
+    print(f"check if joystick is added: {Arcrane.joystick1 != None}")
+    if Arcrane.joystick1 != None:
+        Arcrane.joystick1.monitorWebMovements(direction)
 
     return jsonify({'status': 'success', 'direction': direction})
 
 if __name__ == '__main__':
     try:
-        app.run()
+        app.run(debug=True)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

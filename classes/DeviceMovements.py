@@ -44,7 +44,7 @@ class DeviceMovements:
         self.step = step
         self.drive = drive
         self.direction = direction_forward
-        self.motor = PWMStepperMotor(step, drive, direction_forward) #used for the simulator
+        #self.motor = PWMStepperMotor(step, drive, direction_forward) #used for the simulator
         self.pins = pins
         self.movements = movements
 
@@ -108,7 +108,7 @@ class DeviceMovements:
                         right_motor: PWMStepperMotor = _motors[0]
                         right_motor.rotate_motor2(right_motor.direction_forward)
             elif self.up_movement.is_active:
-                    print("down movement")
+                    print("up movement")
                     if self.get_motor_by_tag(self.up_movement.tag) != None:
                         _motors = self.get_motor_by_tag(self.up_movement.tag)
                         if len(_motors) > 1:
@@ -143,7 +143,80 @@ class DeviceMovements:
             elif self.trigger_button.is_active:
                     print(f"pingiw pingiw bang bang ") 
             elif self.fire_button.is_active:
-                    print(f"fire in the hole")                
+                    print(f"fire in the hole")
+
+    def monitorWebMovements(self, movement):
+        print(f"Web movement: {movement}")
+        if movement == 'down':
+            print("down movement")
+            #print(f"check down movement: {get_motor_by_tag(down_movement.tag)}")
+            if self.get_motor_by_tag(movement) != None:
+                _motors = self.get_motor_by_tag(movement)
+                print("down more than 1")
+                if len(_motors) > 1:
+                    #have to manually check the motors added minimum of 2 motors  
+                    if self.valid_index(_motors, 0):
+                        motor1: PWMStepperMotor = _motors[0]
+                        if (motor1.reversable &  (movement == motor1.reverse_movement)):
+                            motor1.rotate_motor2(not motor1.direction_forward)
+                        else:
+                            motor1.rotate_motor2(motor1.direction_forward)
+
+                    if self.valid_index(_motors, 1):
+                        motor2: PWMStepperMotor = _motors[1]
+                        if (motor2.reversable &  (movement == motor2.reverse_movement)):
+                            motor2.rotate_motor2(not motor2.direction_forward)
+                        else:
+                            motor2.rotate_motor2(motor2.direction_forward)
+                else:
+                    down_motor: PWMStepperMotor = _motors[0]
+                    if (down_motor.reversable &  (movement == down_motor.reverse_movement)):
+                        down_motor.rotate_motor2(not down_motor.direction_forward) 
+                    else:
+                        down_motor.rotate_motor2(down_motor.direction_forward)
+        elif movement == 'right':
+                print("right movement")
+                if self.get_motor_by_tag(self.right_movement.tag) != None:
+                    _motors = self.get_motor_by_tag(self.right_movement.tag)
+                    right_motor: PWMStepperMotor = _motors[0]
+                    right_motor.rotate_motor2(right_motor.direction_forward)
+        elif movement == 'up':
+                print("up movement")
+                if self.get_motor_by_tag(self.up_movement.tag) != None:
+                    _motors = self.get_motor_by_tag(self.up_movement.tag)
+                    if len(_motors) > 1:
+                        print("up more than 1")
+                        #have to manually check the motors added minimum of 2 motors  
+                        if self.valid_index(_motors, 0):
+                            motor1: PWMStepperMotor = _motors[0]
+                            if (motor1.reversable &  (self.up_movement.tag == motor1.reverse_movement)):
+                                motor1.rotate_motor2(not motor1.direction_forward)    
+                            else:
+                                motor1.rotate_motor2(motor1.direction_forward) 
+                        if self.valid_index(_motors, 1):
+                            motor2: PWMStepperMotor = _motors[1]
+                            if (motor2.reversable &  (self.up_movement.tag == motor2.reverse_movement)):
+                                motor2.rotate_motor2(not motor2.direction_forward)    
+                            else:
+                                motor2.rotate_motor2(motor2.direction_forward) 
+                    else:
+                        up_motor: PWMStepperMotor = _motors[0]
+                        #print(f"up else: {up_motor.direction_forward} tag: {up_movement.tag}")
+                        if (up_motor.reversable &  (self.up_movement.tag == up_motor.reverse_movement)):
+                            up_motor.rotate_motor2(not up_motor.direction_forward)    
+                        else:
+                            up_motor.rotate_motor2(up_motor.direction_forward)    
+                            
+        elif movement == 'left':
+            print("left movement")
+            if self.get_motor_by_tag(self.left_movement.tag) != None:
+                    _motors = self.get_motor_by_tag(self.left_movement.tag)
+                    left_motor: PWMStepperMotor = _motors[0]
+                    left_motor.rotate_motor2(left_motor.direction_forward)  
+        elif movement == 'trigger':
+                print(f"pingiw pingiw bang bang ") 
+        elif movement == 'fire':
+                print(f"fire in the hole")                                
                 
     def configureMovement(self):
         if "motors" in self.movements:
