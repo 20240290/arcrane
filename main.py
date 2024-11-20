@@ -53,8 +53,8 @@ logging.basicConfig(level=logging.DEBUG)
 def init_app():
     # Initialization tasks (database connection, config, etc.)
     print("Performing startup initialization tasks...")
-    if arcrane.joystick1 == None:
-        arcrane.initialize()
+    if arcrane.joystick1 != None:
+        arcrane.setUpMovements()
 
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
 
