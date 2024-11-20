@@ -170,7 +170,7 @@ def long_press(direction):
 
 if __name__ == '__main__':
     try:
-        app.run(debug=True, use_reloader=True)
+        app.run(port=5001, debug=True, use_reloader=True)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
