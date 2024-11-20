@@ -16,10 +16,10 @@
 
 
 import constants as const
-from classes.DeviceMovements import DeviceMovements
-from time import sleep
+import classes.DeviceMovements as DeviceMovements
+import time
 import classes.MicroSwitch as switch
-from signal import pause
+import signal as signal
 import smbus
 import time
 import Utilities
@@ -39,7 +39,7 @@ class Arcrane:
         return cls._instance
     
     def initialize(self):
-        self.joystick1 = DeviceMovements(step=utility.get_configuration('m1_step_pin'), 
+        self.joystick1 = DeviceMovements.DeviceMovements(step=utility.get_configuration('m1_step_pin'), 
                                         drive=utility.get_configuration('m1_dir_pin'), 
                                         movements = {
                                             'pins': {'down': utility.get_configuration('j1_down_pin'), 

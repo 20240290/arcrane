@@ -35,7 +35,9 @@ class Utilities:
         return cls._instance
     
     #save configuration files
-    def save_configuration(self, params):
+    def save_configuration(self, params: dict):
+        test = params.get('m1_reversible') 
+        print(f'save checkbox : { test }')
         self.config.read('config.ini')  
         self.config['Settings']['steps_per_revolution'] = params['steps_per_revolution']
         self.config['Settings']['degrees_per_step'] = params['degrees_per_step']
@@ -44,23 +46,27 @@ class Utilities:
         self.config['Settings']['m1_step_pin'] = params['m1_step_pin']
         self.config['Settings']['m1_dir_pin'] = params['m1_dir_pin']
         self.config['Settings']['m1_movement'] = params['m1_movement']
-        self.config['Settings']['m1_reversible'] = params['m1_reversible']
+        self.config['Settings']['m1_reversible'] = 'True' if params.get('m1_reversible') == True else  ''
         self.config['Settings']['m1_reverse_movement'] = params['m1_reverse_movement']
         self.config['Settings']['m2_step_pin'] = params['m2_step_pin']
         self.config['Settings']['m2_dir_pin'] = params['m2_dir_pin']
         self.config['Settings']['m2_movement'] = params['m2_movement']
-        self.config['Settings']['m2_reversible'] = params['m2_reversible']
+        self.config['Settings']['m2_reversible'] = 'True' if params.get('m2_reversible') == True else  ''
         self.config['Settings']['m2_reverse_movement'] = params['m2_reverse_movement']
         self.config['Settings']['m3_step_pin'] = params['m3_step_pin']
         self.config['Settings']['m3_dir_pin'] = params['m3_dir_pin']
         self.config['Settings']['m3_movement'] = params['m3_movement']
-        self.config['Settings']['m3_reversible'] = params['m3_reversible']
+        self.config['Settings']['m3_reversible'] = 'True' if params.get('m3_reversible') == True else  ''
         self.config['Settings']['m3_reverse_movement'] = params['m3_reverse_movement']
         self.config['Settings']['m4_step_pin'] = params['m4_step_pin']
         self.config['Settings']['m4_dir_pin'] = params['m4_dir_pin']
         self.config['Settings']['m4_movement'] = params['m4_movement']
-        self.config['Settings']['m4_reversible'] = params['m4_reversible']
+        self.config['Settings']['m4_reversible'] = 'True' if params.get('m4_reversible') == True else  ''
         self.config['Settings']['m4_reverse_movement'] = params['m4_reverse_movement']
+        self.config['Settings']['left_stop_pin'] = params['left_stop_pin']
+        self.config['Settings']['right_stop_pin'] = params['right_stop_pin']
+        self.config['Settings']['claw_pickup_pin'] = params['claw_pickup_pin']
+        self.config['Settings']['claw_rotation_pin'] = params['claw_rotation_pin']
 
         #write to configuration file
         with open('config.ini', 'w') as configfile:

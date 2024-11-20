@@ -66,24 +66,40 @@ init_app()  # Call the initialization function here
 def index():
     return render_template("index.html")
 
-
 @app.route("/configuration", methods=['GET', 'POST'])
 def configuration():
     utility.config.read('config.ini')  
     if request.method == 'POST':     
+        print(f"reversible: {request.form.get('m4_reversible')}")
         data = {
-            "STEPS_PER_REVOLUTION": request.form['STEPS_PER_REVOLUTION'],
-            "DEGREES_PER_STEP": request.form['DEGREES_PER_STEP'],
-            "STEPS_PER_90_DEGREES": request.form['STEPS_PER_90_DEGREES'],
-            "STEP_DELAY": request.form['STEP_DELAY'],
-            "M1_STEP_PIN": request.form['M1_STEP_PIN'],
-            "M1_DIR_PIN": request.form['M1_DIR_PIN'],
-            "M2_STEP_PIN": request.form['M2_STEP_PIN'],
-            "M2_DIR_PIN": request.form['M2_DIR_PIN'],
-            "M3_STEP_PIN": request.form['M3_STEP_PIN'],
-            "M3_DIR_PIN": request.form['M3_DIR_PIN'],
-            "M4_STEP_PIN": request.form['M4_STEP_PIN'],
-            "M4_DIR_PIN": request.form['M4_DIR_PIN']
+            "steps_per_revolution": request.form['steps_per_revolution'],
+            "degrees_per_step": request.form['degrees_per_step'],
+            "steps_per_90_degrees": request.form['steps_per_90_degrees'],
+            "step_delay": request.form['step_delay'],
+            "m1_step_pin": request.form['m1_step_pin'],
+            "m1_dir_pin": request.form['m1_dir_pin'],
+            "m1_movement": request.form['m1_movement'],
+            "m1_reversible": True if request.form.get('m1_reversible') != None else '',
+            "m1_reverse_movement": request.form['m1_reverse_movement'],
+            "m2_step_pin": request.form['m2_step_pin'],
+            "m2_dir_pin": request.form['m2_dir_pin'],
+            "m2_movement": request.form['m2_movement'],
+            "m2_reversible": True if request.form.get('m2_reversible') != None else '',
+            "m2_reverse_movement": request.form['m2_reverse_movement'],
+            "m3_step_pin": request.form['m3_step_pin'],
+            "m3_dir_pin": request.form['m3_dir_pin'],
+            "m3_movement": request.form['m3_movement'],
+            "m3_reversible": True if request.form.get('m3_reversible')  != None else '',
+            "m3_reverse_movement": request.form['m3_reverse_movement'],
+            "m4_step_pin": request.form['m4_step_pin'],
+            "m4_dir_pin": request.form['m4_dir_pin'],
+            "m4_movement": request.form['m4_movement'],
+            "m4_reversible": True if request.form.get('m4_reversible') != None else '',
+            "m4_reverse_movement": request.form['m4_reverse_movement'],
+            "left_stop_pin": request.form['left_stop_pin'],
+            "right_stop_pin": request.form['right_stop_pin'],
+            "claw_pickup_pin": request.form['claw_pickup_pin'],
+            "claw_rotation_pin": request.form['claw_rotation_pin']
         }
         
         utility.save_configuration(data)
@@ -154,7 +170,7 @@ def long_press(direction):
 
 if __name__ == '__main__':
     try:
-        app.run(debug=True)
+        app.run(debug=True, use_reloader=True)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

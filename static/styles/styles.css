@@ -229,3 +229,8 @@ tr:hover {
 .table-text-input {
     width: 100%
 }
+
+.joystick-select, .joystick-select option {
+    height: 40px;
+    width: 20%;
+}
