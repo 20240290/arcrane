@@ -37,7 +37,7 @@ def gpio_task():
 
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")   
 
-# Start the GPIO task in a separate process
+#Start the GPIO task in a separate process
 # gpio_process = multiprocessing.Process(target=gpio_task)
 # gpio_process.daemon = True
 # gpio_process.start()
@@ -63,16 +63,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def init_app():
-    # Initialization tasks (database connection, config, etc.)
-    print("Performing startup initialization tasks...")
-    print("Performing startup initialization tasks...")
-    if arcrane.joystick1 != None:
-        arcrane.setUpMovements()
-
+    
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
     print("Performing startup initialization tasks...") 
-    if arcrane.joystick1 != None:
-        arcrane.setUpMovements()
+    # if arcrane.joystick1 != None:
+    #     arcrane.setUpMovements()
 
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
 

@@ -75,7 +75,10 @@ class Arcrane:
                                                 'reverse_movement': utility.get_configuration('m4_reverse_movement'),
                                                 'movement': utility.get_configuration('m4_movement')}
                                                 ]},
-                                        pins=[{'down': 18, 'right': 21, 'up': 26, 'left': 20}], direction_forward=True)
+                                        pins=[{'down': utility.get_configuration('j1_down_pin'), 
+                                                    'right': utility.get_configuration('j1_right_pin'), 
+                                                'up': utility.get_configuration('j1_up_pin'), 
+                                                'left': utility.get_configuration('j1_left_pin')}], direction_forward=True)
         print(f"self.joystick1 {self.joystick1}")
     
 

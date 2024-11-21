@@ -58,7 +58,7 @@ class DeviceMovements:
                      movement: str, 
                      pin: int):
         #self.movements[movement] = Button(pin, pull_up=True)
-        print(f"addMovement movement: {movement}")
+        print(f"addMovement movement: {movement} pin : {pin}")
         print(f" trigger button check {self.trigger_button}")
         if movement == 'right':
             self.right_movement = CustomButton(pin, tag=movement, pull_up=True)
@@ -189,7 +189,7 @@ class DeviceMovements:
                         if (left_motor.reversable and  (self.left_movement.tag == left_motor.reverse_movement)):
                             left_motor.rotate_motor2(not left_motor.direction_forward)    
                         else:
-                            left_motor.rotate_motor2(left_motor.direction_forwar~d)  
+                            left_motor.rotate_motor2(left_motor.direction_forward)  
             elif self.trigger_button != None:
                     if self.trigger_button.is_active:
                         print(f"pingiw pingiw bang bang ") 
