@@ -1,27 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<style>
-    /* body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-    } */
-   
-</style>
+<script>
+    window.onload = function() {
+        document.getElementById("toggleView").style.display = "none";
+    }
+</script>
     <div class="jumbotron">
         <h1>Joystick Simulator</h1>
-        <di>
-            <p for="fruits">Select joystick to control:</p>
+        <div>
+            <p>Select joystick to control:</p>
             <select id="joystick_device" name="joystick_device" class="joystick-select">
                 <option value="crane">Crane</option>
                 <option value="claw">Claw</option>
             </select>
-
-        </di>
+        </div>
+        <div id="output">Direction: Neutral</div>
         <div class="container text-center mt-5">
             <!-- <div id="joystick">
                 <div id="stick"></div>
@@ -61,8 +55,17 @@
                         <button class="btn btn-primary long-press-btn button button4" id="right">→</button>
                     </div>
                 </div>
-            </div>    
-            <div id="output">Direction: Neutral</div>
+            </div>     
+        </div>
+        <div id="toggleView">
+            <div class="">
+                <div class="button-container">
+                    <div id="">
+                        <button class="btn-primary long-press-btn button button3" id="trigger">Middle</button>
+                        <button class="btn-primary long-press-btn button button4" id="fire">Side</button>
+                    </div>
+                </div>
+            </div>     
         </div>
     </div>
     <!-- <script>
@@ -147,11 +150,12 @@
     <script>
         const output = document.getElementById('output');
         let longPressTimer;
+        var joystick_device = 'crane';
     
         function updateDirection(direction) {
+            console.log('joystick selected:' + joystick_device);
             output.textContent = `Direction: ${direction}`;
-            //if (direction == 'up') {
-                fetch(`/long_press/${direction}`, {
+                fetch(`/long_press/${direction}/${joystick_device}`, {
                         method: 'POST'
                     })
                     .then(response => response.json())
@@ -159,7 +163,6 @@
                         console.log(data.message); 
                     })
                     .catch(error => console.error('Error:', error));
-            //}
         }
     
         function startLongPress(direction) {
@@ -187,6 +190,18 @@
             if (!e.target.classList.contains('button')) {
                 stopLongPress();
             }
+        });
+
+        $(document).ready(function() {
+            $('#joystick_device').change(function() {
+                var selectedValue = $(this).val();
+                joystick_device = selectedValue
+                if (selectedValue == 'claw') {
+                    $('#toggleView').show();
+                } else {
+                    $('#toggleView').hide();
+                }
+            });
         });
     </script>
 {% endblock %}

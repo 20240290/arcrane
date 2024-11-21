@@ -25,11 +25,23 @@ import Arcrane as Arcrane
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import Utilities
-import Arcrane
+import multiprocessing
 
 utility = Utilities.Utilities()
 arcrane = Arcrane.Arcrane()
 arcrane.initialize()
+
+def gpio_task():
+    if arcrane.joystick1 != None:
+        arcrane.setUpMovements()
+
+    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")   
+
+# Start the GPIO task in a separate process
+# gpio_process = multiprocessing.Process(target=gpio_task)
+# gpio_process.daemon = True
+# gpio_process.start()
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -53,6 +65,12 @@ logging.basicConfig(level=logging.DEBUG)
 def init_app():
     # Initialization tasks (database connection, config, etc.)
     print("Performing startup initialization tasks...")
+    print("Performing startup initialization tasks...")
+    if arcrane.joystick1 != None:
+        arcrane.setUpMovements()
+
+    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
+    print("Performing startup initialization tasks...") 
     if arcrane.joystick1 != None:
         arcrane.setUpMovements()
 
@@ -145,10 +163,10 @@ def run_script():
     result = {"message": "Script executed successfully!"}
     return jsonify(result)
 
-@app.route('/long_press/<direction>', methods=['POST'])
-def long_press(direction):
+@app.route('/long_press/<direction>/<device>', methods=['POST'])
+def long_press(direction,device):
     # Handle the long-press action here
-    print(f"Joystick moved: {direction}")
+    print(f"Joystick moved: {direction} device: { device }")
     
     # if direction == 'up':
     #     movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[], direction_forward=True)

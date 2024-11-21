@@ -181,8 +181,28 @@ class DeviceMovements:
                 print("right movement")
                 if self.get_motor_by_tag(self.right_movement.tag) != None:
                     _motors = self.get_motor_by_tag(self.right_movement.tag)
-                    right_motor: PWMStepperMotor = _motors[0]
-                    right_motor.rotate_motor2(right_motor.direction_forward)
+                    if len(_motors) > 1:
+                        print("right more than 1")
+                        #have to manually check the motors added minimum of 2 motors  
+                        if self.valid_index(_motors, 0):
+                            motor1: PWMStepperMotor = _motors[0]
+                            if (motor1.reversable and  (self.right_movement.tag == motor1.reverse_movement)):
+                                motor1.rotate_motor2(not motor1.direction_forward)    
+                            else:
+                                motor1.rotate_motor2(motor1.direction_forward) 
+                        if self.valid_index(_motors, 1):
+                            motor2: PWMStepperMotor = _motors[1]
+                            if (motor2.reversable and  (self.right_movement.tag == motor2.reverse_movement)):
+                                motor2.rotate_motor2(not motor2.direction_forward)    
+                            else:
+                                motor2.rotate_motor2(motor2.direction_forward) 
+                    else:
+                        right_motor: PWMStepperMotor = _motors[0]
+                        #print(f"right else: {right_motor.direction_forward} tag: {right_movement.tag}")
+                        if (right_motor.reversable and  (self.right_movement.tag == right_motor.reverse_movement)):
+                            right_motor.rotate_motor2(not right_motor.direction_forward)    
+                        else:
+                            right_motor.rotate_motor2(right_motor.direction_forward)   
         elif movement == 'up':
                 print("up movement")
                 if self.get_motor_by_tag(self.up_movement.tag) != None:
@@ -212,10 +232,34 @@ class DeviceMovements:
                             
         elif movement == 'left':
             print("left movement")
+            # if self.get_motor_by_tag(self.left_movement.tag) != None:
+            #         _motors = self.get_motor_by_tag(self.left_movement.tag)
+            #         left_motor: PWMStepperMotor = _motors[0]
+            #         left_motor.rotate_motor2(left_motor.direction_forward)
             if self.get_motor_by_tag(self.left_movement.tag) != None:
-                    _motors = self.get_motor_by_tag(self.left_movement.tag)
+                _motors = self.get_motor_by_tag(self.left_movement.tag)
+                if len(_motors) > 1:
+                    print("left more than 1")
+                    #have to manually check the motors added minimum of 2 motors  
+                    if self.valid_index(_motors, 0):
+                        motor1: PWMStepperMotor = _motors[0]
+                        if (motor1.reversable and  (self.left_movement.tag == motor1.reverse_movement)):
+                            motor1.rotate_motor2(not motor1.direction_forward)    
+                        else:
+                            motor1.rotate_motor2(motor1.direction_forward) 
+                    if self.valid_index(_motors, 1):
+                        motor2: PWMStepperMotor = _motors[1]
+                        if (motor2.reversable and  (self.left_movement.tag == motor2.reverse_movement)):
+                            motor2.rotate_motor2(not motor2.direction_forward)    
+                        else:
+                            motor2.rotate_motor2(motor2.direction_forward) 
+                else:
                     left_motor: PWMStepperMotor = _motors[0]
-                    left_motor.rotate_motor2(left_motor.direction_forward)  
+                    #print(f"left else: {right_motor.left_movement} tag: {left_movement.tag}")
+                    if (left_motor.reversable and  (self.left_movement.tag == left_motor.reverse_movement)):
+                        left_motor.rotate_motor2(not left_motor.direction_forward)    
+                    else:
+                        left_motor.rotate_motor2(left_motor.direction_forward) 
         elif movement == 'trigger':
                 print(f"pingiw pingiw bang bang ") 
         elif movement == 'fire':
