@@ -49,6 +49,7 @@ class PWMStepperMotor():
         self.reversable = reversable
         self.reverse_movement = reverse_movement
         self.movement = movement
+        self.motor_delay = self.utility.get_configuration('step_delay')
     
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """
@@ -87,14 +88,9 @@ class PWMStepperMotor():
         """"""
         self.motor_dir.value = self.direction_forward
         self.motor_step.on()
-        sleep(self.utility.get_configuration('step_delay'))
+        sleep(self.motor_delay)
         self.motor_step.off()
-        sleep(self.utility.get_configuration('step_delay'))
-        # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
-        #     drive.value = self.direction_forward
-        #     device.on()
-        #     sleep(const.STEP_DELAY)
-        #     device.off()
+        sleep(self.motor_delay)
 
     def rotate_motor2(self, direction):
         """
@@ -111,11 +107,6 @@ class PWMStepperMotor():
         """"""
         self.motor_dir.value = direction
         self.motor_step.on()
-        sleep(float(self.utility.get_configuration('step_delay')))
+        sleep(float(self.motor_delay))
         self.motor_step.off()
-        sleep(float(self.utility.get_configuration('step_delay')))
-        # with self.motor_step as device, self.motor_dir as drive:  # Automatically cleans up on exit
-        #     drive.value = self.direction_forward
-        #     device.on()
-        #     sleep(const.STEP_DELAY)
-        #     device.off()
+        sleep(float(self.motor_delay))

@@ -26,6 +26,10 @@ import Arcrane as Arcrane
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import Utilities
 import multiprocessing
+import threading
+import time
+import atexit
+import subprocess, shlex
 
 utility = Utilities.Utilities()
 arcrane = Arcrane.Arcrane()
@@ -34,46 +38,12 @@ arcrane.initialize()
 def gpio_task():
     if arcrane.joystick1 != None:
         arcrane.setUpMovements()
-
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")   
-
-#Start the GPIO task in a separate process
-# gpio_process = multiprocessing.Process(target=gpio_task)
-# gpio_process.daemon = True
-# gpio_process.start()
 
 
 logging.basicConfig(level=logging.DEBUG)
 
-# def configure_app(app):
-#     print("configure_app called...")
-#     initializeMovements()
-#     #initializeI2c()
-
-#app = Flask(__name__)
-# def create_app():
-#     app = Flask(__name__)
-#     #configure_app(app)
-#     # Initialization tasks
-#     print("App is being initialized...")
-#     return app
-
-
-# app = create_app()
-
-
-def init_app():
-    
-    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
-    print("Performing startup initialization tasks...") 
-    # if arcrane.joystick1 != None:
-    #     arcrane.setUpMovements()
-
-    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")    
-
 app = Flask(__name__)
-
-init_app()  # Call the initialization function here
 
 @app.route("/")
 def index():
@@ -148,7 +118,6 @@ def move_joystick(direction):
 
 @app.route("/loadDefaults", methods=['POST'])
 def loadDefaults():
-    #data = {'rotation_speed': '1000'}
     data =  {'rotation_speed': '1000'}
     return redirect(url_for('configuration'))
 
@@ -162,29 +131,41 @@ def run_script():
 def long_press(direction,device):
     # Handle the long-press action here
     print(f"Joystick moved: {direction} device: { device }")
-    
-    # if direction == 'up':
-    #     movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN, pins=[], direction_forward=True)
-    #     movement1.motor.rotate_motor()
-    # elif direction == 'down':
-    #     movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN, pins=[],direction_forward=True)
-    #     movement2.motor.rotate_motor()    
-    # elif direction == 'left':
-    #     movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN, pins=[],direction_forward=True)
-    #     movement3.motor.rotate_motor()
-    # elif direction == 'right':
-    #     movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN, pins=[],direction_forward=True)
-    #     movement4.motor.rotate_motor()
-    print(f"check if joystick is added: {Arcrane.joystick1 != None}")
-    if Arcrane.joystick1 != None:
-        Arcrane.joystick1.monitorWebMovements(direction)
+    print(f"check if joystick is added: {arcrane.joystick1 != None}")
+    if arcrane.joystick1 != None:
+        arcrane.joystick1.monitorWebMovements(direction)
 
     return jsonify({'status': 'success', 'direction': direction})
 
+def get_running_flask_processes(port):
+    processes = []
+    cmd = f"lsof -ti:{port}"
+    result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
+    if result.stdout:
+        if "\n" in result.stdout:
+            processes += result.stdout.split("\n")
+            processes = [int(x) for x in processes if x != '']
+        else:
+            processes += [int(result.stdout)]
+    return processes
+
+def cleanup():
+    atexit.register(cleanup)   
+
+
+def run_flask():
+    app.run(host='0.0.0.0', port=5000, threaded=True)     
+
 if __name__ == '__main__':
     try:
-        app.run(port=5001, debug=True, use_reloader=True)
+
+        # Start Flask in a separate thread
+        flask_thread = threading.Thread(target=run_flask)
+        flask_thread.start()
+
+        gpio_task()
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
+        cleanup()
         print("clean up")

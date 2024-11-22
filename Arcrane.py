@@ -101,9 +101,11 @@ class Arcrane:
         self.joystick1.setUpMovements()
         self.joystick1.configureMovement()
         self.joystick1.monitorMovements()
+        self.joystick1.monitorWebMovements()
 
     def setupWebMovement(self):    
         self.joystick1.configureMovement()
+        self.joystick1.monitorMovements()
         
     def initializeI2c():
 
@@ -128,3 +130,6 @@ class Arcrane:
             signal.pause()
         else:
             print("stop the motor")
+
+    def cleanup(self):
+       self.joystick1.cleanupDevices()     
