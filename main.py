@@ -156,7 +156,7 @@ def cleanup():
 
 
 def run_flask():
-    app.run(host='0.0.0.0', port=5000, threaded=True)
+    app.run(threaded=True)
 
 def worker():
     while not stop_event.is_set():  # Threads check this event to decide when to stop
@@ -173,12 +173,13 @@ if __name__ == '__main__':
         # Start Flask in a separate thread
         flask_thread = threading.Thread(target=run_flask)
         flask_thread.start()
-        threads.append(flask_thread)
+        # threads.append(flask_thread)
         gpio_task()
 
     except KeyboardInterrupt:
         # Signal all threads to stop by setting the stop event
-        stop_event.set()
+                # flask_thread.start()
+        # threads.append(flask_thread)stop_event.set()
 
         print("All threads have exited. Program is shutting down.")
         print("Exiting...")
