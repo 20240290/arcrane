@@ -42,6 +42,8 @@ def gpio_task():
 
 
 logging.basicConfig(level=logging.DEBUG)
+# Shared event to signal threads to stop
+stop_event = threading.Event()
 
 app = Flask(__name__)
 
@@ -154,18 +156,33 @@ def cleanup():
 
 
 def run_flask():
-    app.run(host='0.0.0.0', port=5000, threaded=True)     
+    app.run(host='0.0.0.0', port=5000, threaded=True)
+
+def worker():
+    while not stop_event.is_set():  # Threads check this event to decide when to stop
+        print("Working...")
+        time.sleep(1)
+    print("Thread exiting gracefully...")
+     
 
 if __name__ == '__main__':
     try:
+        #list of threads
+        threads = []
 
         # Start Flask in a separate thread
         flask_thread = threading.Thread(target=run_flask)
         flask_thread.start()
-
+        threads.append(flask_thread)
         gpio_task()
+
     except KeyboardInterrupt:
+        # Signal all threads to stop by setting the stop event
+        stop_event.set()
+
+        print("All threads have exited. Program is shutting down.")
         print("Exiting...")
     finally:
         cleanup()
         print("clean up")
+        sys.exit(0)
