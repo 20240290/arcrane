@@ -30,6 +30,7 @@ class Arcrane:
     _instance = None
     is_portal: bool = False
     joystick1: movement.DeviceMovements
+    joystick12: movement.DeviceMovements
 
     #class initializer
     def __new__(cls, *args, **kwargs):
@@ -39,46 +40,48 @@ class Arcrane:
         return cls._instance
     
     def initialize(self):
-        self.joystick1 = movement.DeviceMovements(step=utility.get_configuration('m1_step_pin'), 
-                                        drive=utility.get_configuration('m1_dir_pin'), 
-                                        movements = {
-                                            'pins': {'down': utility.get_configuration('j1_down_pin'), 
-                                                    'right': utility.get_configuration('j1_right_pin'), 
-                                                'up': utility.get_configuration('j1_up_pin'), 
-                                                'left': utility.get_configuration('j1_left_pin')}, 
-                                            'motors': [{
-                                                'step': utility.get_configuration('m1_step_pin'), 
-                                                'drive': utility.get_configuration('m1_dir_pin'), 
-                                                'direction': True,
-                                                'reversable': utility.get_configuration('m1_reversible'), 
-                                                'reverse_movement': utility.get_configuration('m1_reverse_movement'),
-                                                'movement': utility.get_configuration('m1_movement')},
-                                                {
-                                                'step': utility.get_configuration('m2_step_pin'), 
-                                                'drive': utility.get_configuration('m2_dir_pin'), 
-                                                'direction': True, 
-                                                'reversable': utility.get_configuration('m2_reversible'), 
-                                                'reverse_movement': utility.get_configuration('m2_reverse_movement'),
-                                                'movement': utility.get_configuration('m2_movement')}, 
-                                                {
-                                                'step': utility.get_configuration('m3_step_pin'), 
-                                                'drive': utility.get_configuration('m3_dir_pin'), 
-                                                'direction': True, 
-                                                'reversable': utility.get_configuration('m3_reversible'), 
-                                                'reverse_movement': utility.get_configuration('m3_reverse_movement'),
-                                                'movement': utility.get_configuration('m3_movement')}, 
-                                                {
-                                                'step': utility.get_configuration('m4_step_pin'), 
-                                                'drive': utility.get_configuration('m4_dir_pin'), 
-                                                'direction': True, 
-                                                'reversable': utility.get_configuration('m4_reversible'), 
-                                                'reverse_movement': utility.get_configuration('m4_reverse_movement'),
-                                                'movement': utility.get_configuration('m4_movement')}
-                                                ]},
-                                        pins=[{'down': utility.get_configuration('j1_down_pin'), 
-                                                    'right': utility.get_configuration('j1_right_pin'), 
-                                                'up': utility.get_configuration('j1_up_pin'), 
-                                                'left': utility.get_configuration('j1_left_pin')}], direction_forward=True)
+        self.joystick1 = movement.DeviceMovements(movements = {
+            'motors': [{
+                'step': utility.get_configuration('m1_step_pin'), 
+                'drive': utility.get_configuration('m1_dir_pin'), 
+                'direction': True,
+                'reversable': utility.get_configuration('m1_reversible'), 
+                'reverse_movement': utility.get_configuration('m1_reverse_movement'),
+                'movement': utility.get_configuration('m1_movement')},
+                {
+                'step': utility.get_configuration('m3_step_pin'), 
+                'drive': utility.get_configuration('m3_dir_pin'), 
+                'direction': True, 
+                'reversable': utility.get_configuration('m3_reversible'), 
+                'reverse_movement': utility.get_configuration('m3_reverse_movement'),
+                'movement': utility.get_configuration('m3_movement')}, 
+                {
+                'step': utility.get_configuration('m4_step_pin'), 
+                'drive': utility.get_configuration('m4_dir_pin'), 
+                'direction': True, 
+                'reversable': utility.get_configuration('m4_reversible'), 
+                'reverse_movement': utility.get_configuration('m4_reverse_movement'),
+                'movement': utility.get_configuration('m4_movement')}
+                ]},
+            pins=[{'down': utility.get_configuration('j1_down_pin'), 
+                        'right': utility.get_configuration('j1_right_pin'), 
+                    'up': utility.get_configuration('j1_up_pin'), 
+                    'left': utility.get_configuration('j1_left_pin')}])
+        print(f"self.joystick1 {self.joystick1}")
+
+        self.joystick2 = movement.DeviceMovements(movements = {
+            'motors': [{
+                    'step': utility.get_configuration('m2_step_pin'), 
+                    'drive': utility.get_configuration('m2_dir_pin'), 
+                    'direction': True, 
+                    'reversable': utility.get_configuration('m2_reversible'), 
+                    'reverse_movement': utility.get_configuration('m2_reverse_movement'),
+                    'movement': utility.get_configuration('m2_movement')}, 
+                    ]},
+            pins=[{'down': utility.get_configuration('j1_down_pin'), 
+                        'right': utility.get_configuration('j1_right_pin'), 
+                    'up': utility.get_configuration('j1_up_pin'), 
+                    'left': utility.get_configuration('j1_left_pin')}])
         print(f"self.joystick1 {self.joystick1}")
     
 

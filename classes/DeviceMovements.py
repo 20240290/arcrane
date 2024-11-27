@@ -28,23 +28,21 @@ class DeviceMovements:
     up_movement: CustomButton
     right_movement: CustomButton
     left_movement: CustomButton
+
+    
+    
     trigger_button: CustomButton = None
     fire_button: CustomButton = None
+
+
 
     directional_movements = []
     button_registry = {}
     motor_registry = {}
 
     def __init__(self, 
-                 step: int, 
-                 drive: int,
                  movements: dict,
-                 pins: list,
-                 direction_forward=True):
-        self.step = step
-        self.drive = drive
-        self.direction = direction_forward
-        #self.motor = PWMStepperMotor(step, drive, direction_forward) #used for the simulator
+                 pins: list):
         self.pins = pins
         self.movements = movements
 
