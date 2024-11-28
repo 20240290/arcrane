@@ -2,7 +2,7 @@ from gpiozero import Button
 from time import sleep
 
 class CustomButton(Button):
-    def __init__(self, pin, tag=None, id = None, **kwargs):
+    def __init__(self, pin, tag=None, id=None, **kwargs):
         super().__init__(pin, **kwargs)
         self.tag = tag
         self.id = id

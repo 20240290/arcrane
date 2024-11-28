@@ -171,8 +171,8 @@ if __name__ == '__main__':
         threads = []
 
         # Start Flask in a separate thread
-        flask_thread = threading.Thread(target=run_flask)
-        flask_thread.start()
+        # flask_thread = threading.Thread(target=run_flask)
+        # flask_thread.start()
         # threads.append(flask_thread)
         gpio_task()
 
@@ -184,6 +184,6 @@ if __name__ == '__main__':
         print("All threads have exited. Program is shutting down.")
         print("Exiting...")
     finally:
-        cleanup()
+        # cleanup()
         print("clean up")
-        sys.exit(0)
+        #sys.exit(0)
