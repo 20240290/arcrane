@@ -36,9 +36,10 @@ arcrane = Arcrane.Arcrane()
 arcrane.initialize()
 
 def gpio_task():
-    if arcrane.joystick1 != None:
-        arcrane.setUpMovements()
-    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}")   
+    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}") 
+    print(f"arcrane.joystick2 is none? {arcrane.joystick2 == None}") 
+    if arcrane.joystick1 and arcrane.joystick2 != None:
+        arcrane.setUpMovements()  
 
 
 logging.basicConfig(level=logging.DEBUG)

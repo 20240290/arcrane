@@ -93,13 +93,19 @@ movements = {
                 # 'movement': 'right'}
                 ]}
                  
+# j2_up_pin = 26
+# j2_down_pin = 21
+# j2_left_pin = 20
+# j2_right_pin = 19
+# j2_trigger_pin = 16
+# j2_fire_pin = 0
 
-down_movement: CustomButton = CustomButton(18, tag='down', pull_up=True)
+down_movement: CustomButton = CustomButton(21, tag='down', pull_up=True)
 up_movement: CustomButton = CustomButton(26, tag='up', pull_up=True)
-right_movement: CustomButton = CustomButton(21, tag='right', pull_up=True)
+right_movement: CustomButton = CustomButton(19, tag='right', pull_up=True)
 left_movement: CustomButton = CustomButton(20, tag='left', pull_up=True)
-trigger_movement: CustomButton = CustomButton(25, tag='trigger', pull_up=True)
-fire_movement: CustomButton = CustomButton(19, tag='fire', pull_up=True)
+trigger_movement: CustomButton = CustomButton(16, tag='trigger', pull_up=True)
+fire_movement: CustomButton = CustomButton(0, tag='fire', pull_up=True)
 
 directional_movements = []
 button_registry = {}
