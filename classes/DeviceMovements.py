@@ -29,22 +29,26 @@ class DeviceMovements:
     right_movement: CustomButton
     left_movement: CustomButton
 
-    joystick2_down_movement: CustomButton
-    joystick2_up_movement: CustomButton
-    joystick2_right_movement: CustomButton
-    joystick2_left_movement: CustomButton
-    joystick2_trigger_button: CustomButton
-    joystick2_fire_button: CustomButton
+    joystick2_down_movement: CustomButton = None
+    joystick2_up_movement: CustomButton = None
+    joystick2_right_movement: CustomButton = None
+    joystick2_left_movement: CustomButton = None
+    joystick2_trigger_button: CustomButton = None
+    joystick2_fire_button: CustomButton = None
+    claw_movements = {}
 
     directional_movements = []
     button_registry = {}
     motor_registry = {}
     id = ""
 
+    # def __init__(self):
+    #     pass
+
     def __init__(self, 
                  movements: dict,
                  pins: list, 
-                 id: str):
+                 id: str): 
         self.pins = pins
         self.movements = movements
         self.id = id
@@ -104,13 +108,13 @@ class DeviceMovements:
                 self.left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
         
         if id == "j2":
-            if movement == 'right':
+            if movement == 'sideR':
                 self.joystick2_right_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'down':
+            elif movement == 'backward':
                 self.joystick2_down_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'up':
+            elif movement == 'forward':
                 self.joystick2_up_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'left':
+            elif movement == 'sideL':
                 self.joystick2_left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
             elif movement == 'trigger':
                 self.joystick2_trigger_button =  CustomButton(pin, tag=movement, id=id, pull_up=True)         

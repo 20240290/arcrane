@@ -38,8 +38,11 @@ arcrane.initialize()
 def gpio_task():
     print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}") 
     print(f"arcrane.joystick2 is none? {arcrane.joystick2 == None}") 
-    if arcrane.joystick1 and arcrane.joystick2 != None:
+    if arcrane.joystick1 != None:
         arcrane.setUpMovements()  
+
+    if arcrane.joystick2 != None:
+        arcrane.setupMovementJoystick2()  
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -182,8 +185,8 @@ if __name__ == '__main__':
         #threads = []
 
         # Start Flask in a separate thread
-        flask_thread = threading.Thread(target=run_flask)
-        flask_thread.start()
+        #flask_thread = threading.Thread(target=run_flask)
+        #flask_thread.start()
         #threads.append(flask_thread)
         gpio_task()
 

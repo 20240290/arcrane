@@ -121,7 +121,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1 & 4</td>
+                              <td>1 & 4</td>
+                              <td><input type="text" id="m3_step_pin" name="m3_step_pin" value="{{ config['m3_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
+                              <td> <input type="text" class="table-text-input" id="m3_dir_pin" name="m3_dir_pin" value="{{ config['m3_dir_pin'] }}" placeholder="PIN"></td>
+                              <td> <input type="text" class="table-text-input" id="m3_movement" name="m3_movement" value="{{ config['m3_movement'] }}" placeholder="Movement"></td>
+                              <td><input type="checkbox" id="m3_reversible" name="m3_reversible" class="table-text-input" value="{{ config['m3_reversible'] }}" {% if config.m3_reversible == 'True' %} checked {% endif %}></td>
+                              <td> <input type="text" class="table-text-input" id="m3_reverse_movement" name="m3_reverse_movement" value="{{ config['m3_reverse_movement'] }}" placeholder="Reverse"></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
                                 <td><input type="text" id="m1_step_pin" name="m1_step_pin" value="{{ config['m1_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
                                 <td> <input type="text" class="table-text-input" id="m1_dir_pin" name="m1_dir_pin" value="{{ config['m1_dir_pin'] }}" placeholder="PIN"></td>
                                 <td> <input type="text" class="table-text-input" id="m1_movement" name="m1_movement" value="{{ config['m1_movement'] }}" placeholder="Movement"></td>
@@ -129,14 +137,7 @@
                                 <td><input type="checkbox" name="m1_reversible" id="m1_reversible" class="table-text-input" value="{{ config['m1_reversible'] }}"  {% if config.m1_reversible == 'True' %} checked {% endif %}></td>
                                 <td> <input type="text" class="table-text-input" id="m1_reverse_movement" name="m1_reverse_movement" value="{{ config['m1_reverse_movement'] }}" placeholder="Reverse"></td>
                             </tr>
-                            <tr>
-                              <td>3</td>
-                              <td><input type="text" id="m3_step_pin" name="m3_step_pin" value="{{ config['m3_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
-                              <td> <input type="text" class="table-text-input" id="m3_dir_pin" name="m3_dir_pin" value="{{ config['m3_dir_pin'] }}" placeholder="PIN"></td>
-                              <td> <input type="text" class="table-text-input" id="m3_movement" name="m3_movement" value="{{ config['m3_movement'] }}" placeholder="Movement"></td>
-                              <td><input type="checkbox" id="m3_reversible" name="m3_reversible" class="table-text-input" value="{{ config['m3_reversible'] }}" {% if config.m3_reversible == 'True' %} checked {% endif %}></td>
-                              <td> <input type="text" class="table-text-input" id="m3_reverse_movement" name="m3_reverse_movement" value="{{ config['m3_reverse_movement'] }}" placeholder="Reverse"></td>
-                            </tr>
+                            
                             
                           <!-- <tr>
                             <td>4</td>

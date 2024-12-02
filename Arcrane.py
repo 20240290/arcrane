@@ -29,8 +29,8 @@ utility = Utilities.Utilities()
 class Arcrane:
     _instance = None
     is_portal: bool = False
-    joystick1: movement.DeviceMovements
-    joystick2: movement.DeviceMovements
+    joystick1: movement.DeviceMovements #= movement.DeviceMovements()
+    joystick2: movement.DeviceMovements #= movement.DeviceMovements()
 
     #class initializer
     def __new__(cls, *args, **kwargs):
@@ -51,7 +51,7 @@ class Arcrane:
                 # 'reversable': utility.get_configuration('m1_reversible'), 
                 # 'reverse_movement': utility.get_configuration('m1_reverse_movement'),
                 # 'movement': utility.get_configuration('m1_movement')},
-                {
+                { # up / down movement
                 'step': utility.get_configuration('m3_step_pin'), 
                 'drive': utility.get_configuration('m3_dir_pin'), 
                 'direction': True, 
@@ -90,20 +90,42 @@ class Arcrane:
                    'trigger': utility.get_configuration('j2_trigger_pin'), 
                    'fire': utility.get_configuration('j2_fire_pin')}])
         print(f"self.joystick2 {self.joystick2.pins}")
+        
+        # self.joystick1.initializeMovements(id ='j1',
+        #     movements = {
+        #     'motors': [
+        #         { # up / down movement
+        #         'step': utility.get_configuration('m3_step_pin'), 
+        #         'drive': utility.get_configuration('m3_dir_pin'), 
+        #         'direction': True, 
+        #         'reversable': utility.get_configuration('m3_reversible'), 
+        #         'reverse_movement': utility.get_configuration('m3_reverse_movement'),
+        #         'movement': utility.get_configuration('m3_movement')}, 
+        #         {
+        #         'step': utility.get_configuration('m4_step_pin'), 
+        #         'drive': utility.get_configuration('m4_dir_pin'), 
+        #         'direction': True, 
+        #         'reversable': utility.get_configuration('m4_reversible'), 
+        #         'reverse_movement': utility.get_configuration('m4_reverse_movement'),
+        #         'movement': utility.get_configuration('m4_movement')}
+        #         ]},
+        #     pins=[{'down': utility.get_configuration('j1_down_pin'), 
+        #             'right': utility.get_configuration('j1_right_pin'), 
+        #             'up': utility.get_configuration('j1_up_pin'), 
+        #             'left': utility.get_configuration('j1_left_pin')}]))
     
+    def setupMovementJoystick2(self):
+        print("setupMovementJoystick2 and monitor movements")
+        self.joystick2.setUpJoystickMovement("j2")  
+        self.joystick2.configureCraneMovement()
+        self.joystick2.monitorClawMovements() 
 
     def setUpMovements(self):
         print("setUpMovements and monitor movements")
         self.joystick1.setUpJoystickMovement("j1")
-        self.joystick2.setUpJoystickMovement("j2")
-
         self.joystick1.configureCraneMovement()
-        self.joystick2.configureClawMovement()
-
         self.joystick1.monitorCraneMovements()
-        self.joystick2.monitorClawMovements() 
-
-
+        
     def setupWebMovement(self):    
         # self.joystick1.configureMovement()
         # self.joystick1.monitorMovements()
