@@ -83,10 +83,10 @@ class Arcrane:
                     'reverse_movement': utility.get_configuration('m2_reverse_movement'),
                     'movement': utility.get_configuration('m2_movement')}, 
                     ]},
-            pins=[{'down': utility.get_configuration('j2_down_pin'), 
-                   'right': utility.get_configuration('j2_right_pin'), 
-                   'up': utility.get_configuration('j2_up_pin'), 
-                   'left': utility.get_configuration('j2_left_pin'), 
+            pins=[{'backward': utility.get_configuration('j2_backward_pin'), 
+                   'sideR': utility.get_configuration('j2_sideR_pin'), 
+                   'forward': utility.get_configuration('j2_forward_pin'), 
+                   'sideL': utility.get_configuration('j2_sideL_pin'), 
                    'trigger': utility.get_configuration('j2_trigger_pin'), 
                    'fire': utility.get_configuration('j2_fire_pin')}])
         print(f"self.joystick2 {self.joystick2.pins}")
@@ -95,13 +95,13 @@ class Arcrane:
     def setUpMovements(self):
         print("setUpMovements and monitor movements")
         self.joystick1.setUpJoystickMovement("j1")
-        #self.joystick2.setUpJoystickMovement("j2")
+        self.joystick2.setUpJoystickMovement("j2")
 
         self.joystick1.configureCraneMovement()
-        #self.joystick2.configureClawMovement()
+        self.joystick2.configureClawMovement()
 
         self.joystick1.monitorCraneMovements()
-        #self.joystick2.monitorClawMovements() 
+        self.joystick2.monitorClawMovements() 
 
 
     def setupWebMovement(self):    

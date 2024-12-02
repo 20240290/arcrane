@@ -29,8 +29,6 @@
                   </div>
                 </div>
               </div>
-          </div>
-          <div class="column right">
               <header class="mt-1">
                 <h1 class="text-left header-text">Devices PIN Settings</h1>
               </header>
@@ -62,21 +60,21 @@
                 <p class="item-title">Crane Claw Joystick</p>
                 <div class="form-group">
                   <div class="group-field ">
-                    <label for="rotation_speed">Up</label>
-                    <input type="text" id="j2_up_pin" name="j2_up_pin" value="{{ config['j2_up_pin'] }}" placeholder="PIN" class="text-input">
+                    <label for="rotation_speed">Forward</label>
+                    <input type="text" id="j2_forward_pin" name="j2_forward_pin" value="{{ config['j2_forward_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   
                   <div class="group-field ">
-                    <label for="rotation_speed">Down</label>
-                    <input type="text" id="j2_down_pin" name="j2_down_pin" value="{{ config['j2_down_pin'] }}" placeholder="PIN" class="text-input">
+                    <label for="rotation_speed">Backward</label>
+                    <input type="text" id="j2_backward_pin" name="j2_backward_pin" value="{{ config['j2_backward_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   <div class="group-field ">
-                    <label for="rotation_speed">Left</label>
-                    <input type="text" id="j2_left_pin" name="j2_left_pin" value="{{ config['j2_left_pin'] }}" placeholder="PIN" class="text-input">
+                    <label for="rotation_speed">Side Left</label>
+                    <input type="text" id="j2_sideL_pin" name="j2_sideL_pin" value="{{ config['j2_sideL_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   <div class="group-field ">
-                    <label for="rotation_speed">Right</label>
-                    <input type="text" id="j2_right_pin" name="j2_right_pin" value="{{ config['j2_right_pin'] }}" placeholder="PIN" class="text-input">
+                    <label for="rotation_speed">Side Right</label>
+                    <input type="text" id="j2_sideR_pin" name="j2_sideR_pin" value="{{ config['j2_sideR_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   <div class="group-field ">
                     <label for="rotation_speed">Trigger</label>
@@ -90,18 +88,26 @@
               </div> 
 
               <!-- end of joystick 2-->
+          </div>
+          <div class="column right">
+              
               <div class="pin-container">
                 <p class="item-title" for="rotation_speed">Stepper Motor Settings</p>
                 <div class="legend">
                   <p class="p-legend "><i>
-                    Joystick Movements = up | down | left | right
+                   Crane Joystick Movements = up | down | left | right
                   </i></p>
+                  <p class="p-legend "><i>
+                    Claw Joystick Movements = forward | backward | sideL | sideR
+                   </i></p>
+                   <br />
                   <i>Movement = Joystick Movement</i><br />
                   <i>R-Movement (Reverse Movement) = Joystick Movement</i>
                 </div>
+                <br />
                 <div class="form-group ">
                     <div class="group-field">
-                      <!-- <p class="item-title" for="rotation_speed">Crane Motors</p> -->
+                      <p class="item-title" for="rotation_speed">Crane Motors</p>
                       <table>
                         <thead>
                             <tr>
@@ -115,7 +121,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
+                                <td>1 & 4</td>
                                 <td><input type="text" id="m1_step_pin" name="m1_step_pin" value="{{ config['m1_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
                                 <td> <input type="text" class="table-text-input" id="m1_dir_pin" name="m1_dir_pin" value="{{ config['m1_dir_pin'] }}" placeholder="PIN"></td>
                                 <td> <input type="text" class="table-text-input" id="m1_movement" name="m1_movement" value="{{ config['m1_movement'] }}" placeholder="Movement"></td>
@@ -124,21 +130,14 @@
                                 <td> <input type="text" class="table-text-input" id="m1_reverse_movement" name="m1_reverse_movement" value="{{ config['m1_reverse_movement'] }}" placeholder="Reverse"></td>
                             </tr>
                             <tr>
-                              <td>2</td>
-                              <td><input type="text" id="m2_step_pin" name="m2_step_pin" value="{{ config['m2_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
-                              <td> <input type="text" class="table-text-input" id="m2_dir_pin" name="m2_dir_pin" value="{{ config['m2_dir_pin'] }}" placeholder="PIN"></td>
-                              <td> <input type="text" class="table-text-input" id="m2_movement" name="m2_movement" value="{{ config['m2_movement'] }}" placeholder="Movement"></td>
-                              <td><input type="checkbox" id="m2_reversible" name="m2_reversible" class="table-text-input" value="{{ config['m2_reversible'] }}" {% if config.m2_reversible == 'True' %} checked {% endif %}></td>
-                              <td> <input type="text" class="table-text-input" id="m2_reverse_movement" name="m2_reverse_movement" value="{{ config['m2_reverse_movement'] }}" placeholder="Reverse"></td>
-                          </tr>
-                          <tr>
-                            <td>3</td>
-                            <td><input type="text" id="m3_step_pin" name="m3_step_pin" value="{{ config['m3_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
-                            <td> <input type="text" class="table-text-input" id="m3_dir_pin" name="m3_dir_pin" value="{{ config['m3_dir_pin'] }}" placeholder="PIN"></td>
-                            <td> <input type="text" class="table-text-input" id="m3_movement" name="m3_movement" value="{{ config['m3_movement'] }}" placeholder="Movement"></td>
-                            <td><input type="checkbox" id="m3_reversible" name="m3_reversible" class="table-text-input" value="{{ config['m3_reversible'] }}" {% if config.m3_reversible == 'True' %} checked {% endif %}></td>
-                            <td> <input type="text" class="table-text-input" id="m3_reverse_movement" name="m3_reverse_movement" value="{{ config['m3_reverse_movement'] }}" placeholder="Reverse"></td>
-                          </tr>
+                              <td>3</td>
+                              <td><input type="text" id="m3_step_pin" name="m3_step_pin" value="{{ config['m3_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
+                              <td> <input type="text" class="table-text-input" id="m3_dir_pin" name="m3_dir_pin" value="{{ config['m3_dir_pin'] }}" placeholder="PIN"></td>
+                              <td> <input type="text" class="table-text-input" id="m3_movement" name="m3_movement" value="{{ config['m3_movement'] }}" placeholder="Movement"></td>
+                              <td><input type="checkbox" id="m3_reversible" name="m3_reversible" class="table-text-input" value="{{ config['m3_reversible'] }}" {% if config.m3_reversible == 'True' %} checked {% endif %}></td>
+                              <td> <input type="text" class="table-text-input" id="m3_reverse_movement" name="m3_reverse_movement" value="{{ config['m3_reverse_movement'] }}" placeholder="Reverse"></td>
+                            </tr>
+                            
                           <!-- <tr>
                             <td>4</td>
                             <td><input type="text" id="m4_step_pin" name="m4_step_pin" value="{{ config['m4_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
@@ -151,6 +150,34 @@
                     </table>
                   </div>
                 </div>
+                <div class="form-group ">
+                  <div class="group-field">
+                    <p class="item-title" for="rotation_speed">Claw Motors</p>
+                    <table>
+                      <thead>
+                          <tr>
+                              <th>Motor</th>
+                              <th>Pin</th>
+                              <th>Drive</th>
+                              <th>Movement</th>
+                              <th>Reversible</th>
+                              <th>R-Movement</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2</td>
+                          <td><input type="text" id="m2_step_pin" name="m2_step_pin" value="{{ config['m2_step_pin'] }}" placeholder="PIN" class="table-text-input"></td>
+                          <td> <input type="text" class="table-text-input" id="m2_dir_pin" name="m2_dir_pin" value="{{ config['m2_dir_pin'] }}" placeholder="PIN"></td>
+                          <td> <input type="text" class="table-text-input" id="m2_movement" name="m2_movement" value="{{ config['m2_movement'] }}" placeholder="Movement"></td>
+                          <td><input type="checkbox" id="m2_reversible" name="m2_reversible" class="table-text-input" value="{{ config['m2_reversible'] }}" {% if config.m2_reversible == 'True' %} checked {% endif %}></td>
+                          <td> <input type="text" class="table-text-input" id="m2_reverse_movement" name="m2_reverse_movement" value="{{ config['m2_reverse_movement'] }}" placeholder="Reverse"></td>
+                        </tr>
+                      </tbody>
+                  </table>
+                </div>
+               </div>
+              <!-- end of motor -->
               </div>
               <!-- end of motor -->
               <div class="pin-container">

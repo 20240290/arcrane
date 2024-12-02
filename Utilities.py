@@ -67,6 +67,16 @@ class Utilities:
         self.config['Settings']['right_stop_pin'] = params['right_stop_pin']
         self.config['Settings']['claw_pickup_pin'] = params['claw_pickup_pin']
         self.config['Settings']['claw_rotation_pin'] = params['claw_rotation_pin']
+        self.config['Settings']['j1_up_pin'] = params['j1_up_pin'],
+        self.config['Settings']['j1_down_pin'] = params['j1_down_pin']
+        self.config['Settings']['j1_left_pin'] = params['j1_left_pin']
+        self.config['Settings']['j1_right_pin'] = params['j1_right_pin']
+        self.config['Settings']['j2_forward_pin'] = params['j2_forward_pin']
+        self.config['Settings']['j2_backward_pin'] = params['j2_backward_pin']
+        self.config['Settings']['j2_sideL_pin'] = params['j2_sideL_pin']
+        self.config['Settings']['j2_sideR_pin'] = params['j2_sideR_pin']
+        self.config['Settings']['j2_trigger_pin'] = params['j2_trigger_pin']
+        self.config['Settings']['j2_fire_pin'] = params['j2_fire_pin']
 
         #write to configuration file
         with open('config.ini', 'w') as configfile:

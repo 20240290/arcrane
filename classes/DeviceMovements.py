@@ -547,15 +547,15 @@ class DeviceMovements:
     def register_motor(self, tag, motor):
         print(f"registry : {self.motor_registry} register_motor motor tag :{tag}  id: {self.id}")
         key = tag + self.id
-        if key in self.motor_registry:
-            print(f"Warning: Motor with tag '{key}' already exists.")
+        if tag in self.motor_registry:
+            print(f"Warning: Motor with tag '{tag}' already exists.")
         else:
-            self.motor_registry[key] = motor
+            self.motor_registry[tag] = motor
 
     # Function to get a button by its tag
     def get_motor_by_tag(self, tag):
         key = tag + self.id
-        return self.motor_registry.get(key)
+        return self.motor_registry.get(tag)
 
     def cleanupDevices(self):
         for k,v in self.motor_registry:

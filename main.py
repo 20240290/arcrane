@@ -85,7 +85,17 @@ def configuration():
             "left_stop_pin": request.form['left_stop_pin'],
             "right_stop_pin": request.form['right_stop_pin'],
             "claw_pickup_pin": request.form['claw_pickup_pin'],
-            "claw_rotation_pin": request.form['claw_rotation_pin']
+            "claw_rotation_pin": request.form['claw_rotation_pin'],
+            "j1_up_pin": request.form['j1_up_pin'],
+            "j1_down_pin": request.form['j1_down_pin'],
+            "j1_left_pin": request.form['j1_left_pin'],
+            "j1_right_pin": request.form['j1_right_pin'],
+            "j2_forward_pin": request.form['j2_forward_pin'],
+            "j2_backward_pin": request.form['j2_backward_pin'],
+            "j2_sideL_pin": request.form['j2_sideL_pin'],
+            "j2_sideR_pin": request.form['j2_sideR_pin'],
+            "j2_trigger_pin": request.form['j2_trigger_pin'],
+            "j2_fire_pin": request.form['j2_fire_pin']
         }
         
         utility.save_configuration(data)
@@ -169,12 +179,12 @@ def worker():
 if __name__ == '__main__':
     try:
         #list of threads
-        threads = []
+        #threads = []
 
         # Start Flask in a separate thread
-        # flask_thread = threading.Thread(target=run_flask)
-        # flask_thread.start()
-        # threads.append(flask_thread)
+        flask_thread = threading.Thread(target=run_flask)
+        flask_thread.start()
+        #threads.append(flask_thread)
         gpio_task()
 
     except KeyboardInterrupt:
