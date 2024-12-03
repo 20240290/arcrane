@@ -19,44 +19,45 @@ from time import sleep
 import constants as const
 from classes.PWMStepperMotor import PWMStepperMotor
 from classes.CustomButton import CustomButton
+import signal as signal
+from classes.MicroSwitch import MicroSwitch
 
 """ Device movements class that will holds the motors added."""
 
 class DeviceMovements:
-    movements = {}
+ 
     down_movement: CustomButton
     up_movement: CustomButton
     right_movement: CustomButton
     left_movement: CustomButton
 
-    joystick2_down_movement: CustomButton = None
-    joystick2_up_movement: CustomButton = None
-    joystick2_right_movement: CustomButton = None
-    joystick2_left_movement: CustomButton = None
-    joystick2_trigger_button: CustomButton = None
-    joystick2_fire_button: CustomButton = None
-    claw_movements = {}
+    joystick2_down_movement: CustomButton
+    joystick2_up_movement: CustomButton
+    joystick2_right_movement: CustomButton
+    joystick2_left_movement: CustomButton
+    joystick2_trigger_button: CustomButton
+    joystick2_fire_button: CustomButton
 
-    directional_movements = []
-    button_registry = {}
+    mSwitch: MicroSwitch
+    #claw_movements = {}
+
+    #directional_movements = []
+    #button_registry = {}
     motor_registry = {}
-    id = ""
-
-    # def __init__(self):
-    #     pass
-
+    
     def __init__(self, 
                  movements: dict,
                  pins: list, 
-                 id: str): 
-        self.pins = pins
-        self.movements = movements
+                id: str):
         self.id = id
-
+        self.movements = movements
+        self.pins = pins
+        self.setUpJoystickMovement(id)
+        
     #set up movements configured in the joystick    
     def setUpJoystickMovement(self, id: str): 
         """
-        Setup the crane movements.
+        Setup the joystick movements.
 
         Parameters:
         -----------
@@ -97,31 +98,30 @@ class DeviceMovements:
         #print(f"trigger button check {self.trigger_button}")
         print(f"device id: {id}")
 
-        if id == "j1":
-            if movement == 'right':
-                self.right_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'down':
-                self.down_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'up':
-                self.up_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'left':
-                self.left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-        
-        if id == "j2":
-            if movement == 'sideR':
-                self.joystick2_right_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'backward':
-                self.joystick2_down_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'forward':
-                self.joystick2_up_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'sideL':
-                self.joystick2_left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
-            elif movement == 'trigger':
-                self.joystick2_trigger_button =  CustomButton(pin, tag=movement, id=id, pull_up=True)         
-            elif movement == 'fire':
-                self.joystick2_fire_button = CustomButton(pin, tag=movement, id=id, pull_up=True)    
+        if movement == 'right':
+            self.right_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'down':
+            self.down_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'up':
+            self.up_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'left':
+            self.left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'sideR':
+            self.joystick2_right_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'backward':
+            self.joystick2_down_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'forward':
+            self.joystick2_up_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'sideL':
+            self.joystick2_left_movement = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'trigger':
+            self.joystick2_trigger_button =  CustomButton(pin, tag=movement, id=id, pull_up=True)         
+        elif movement == 'fire':
+            self.joystick2_fire_button = CustomButton(pin, tag=movement, id=id, pull_up=True)
+        elif movement == 'up_stop_pin':
+            self.mSwitch = MicroSwitch(pin)        
     
-    def monitorCraneMovements(self):
+    def monitorMovements(self):
         """
         Monitor the crane movements.
 
@@ -187,7 +187,15 @@ class DeviceMovements:
                             if (up_motor.reversable and (self.up_movement.tag == up_motor.reverse_movement)):
                                 up_motor.rotate_motor2(not up_motor.direction_forward)    
                             else:
-                                up_motor.rotate_motor2(up_motor.direction_forward)   
+                                up_motor.rotate_motor2(up_motor.direction_forward)  
+
+                            #micro switch
+                            if self.mSwitch.didPressed == False:
+                                signal.pause()
+                                up_motor.runMotor(False)
+                            else:
+                                up_motor.runMotor(True)  
+     
             elif self.right_movement.is_active:
                 print("right movement")
                 if self.get_motor_by_tag(self.right_movement.tag) != None:
@@ -243,59 +251,8 @@ class DeviceMovements:
                         if (left_motor.reversable and  (self.left_movement.tag == left_motor.reverse_movement)):
                             left_motor.rotate_motor2(not left_motor.direction_forward)    
                         else:
-                            left_motor.rotate_motor2(False)  
-
-    def setUpClawMovements(self):
-        """
-        Setup the claw movements.
-
-        Parameters:
-        -----------
-        None
-
-        Return:
-        -------
-        None
-        """
-        if self.id == "j1":
-            print("j1 joystick in action")
-        elif self.id == "j2":
-            print("j2 joystick in action")
-
-    def configureClawMovement(self):
-        """
-        Configure the motors associated with the claw
-
-        Parameters:
-        -----------
-        None
-
-        Return:
-        -------
-        None
-        """
-        print("configureClawMovement")
-
-    def monitorClawMovements(self):
-        """
-        Track the movement of the joystick and activate the motors
-
-        Parameters:
-        -----------
-        None
-
-        Return:
-        -------
-        None
-        """
-        print(f"monitorClawMovements : {self.joystick2_down_movement}")
-        print(f"monitorClawMovements : {self.joystick2_up_movement}")
-        print(f"monitorClawMovements : {self.joystick2_left_movement}")
-        print(f"monitorClawMovements : {self.joystick2_right_movement}")
-        print(f"monitorClawMovements : {self.joystick2_trigger_button}")
-        print(f"monitorClawMovements : {self.joystick2_fire_button}")
-        while True:
-            if self.joystick2_down_movement.is_active:
+                            left_motor.rotate_motor2(False)
+            elif self.joystick2_down_movement.is_active:
                 print("joystick 2 down movement")
                 #need to handle multiple motors per movements
                 
@@ -308,8 +265,15 @@ class DeviceMovements:
             elif self.joystick2_trigger_button.is_active:
                 print(f"pingiw pingiw bang bang ") 
             elif self.joystick2_fire_button.is_active:
-                print(f"fire in the hole")   
+                print(f"fire in the hole")  
 
+    def testSwitch():
+        # mSwitch = switch.MicroSwitch(17)
+        # if mSwitch.didPressed == False:
+        #     signal.pause()
+        # else:
+        #     print("stop the motor")            
+        pass                 
 
     # def monitorWebMovements(self, movement):
     #     print(f"Web movement: {movement}")
@@ -428,8 +392,8 @@ class DeviceMovements:
     #             print(f"pingiw pingiw bang bang ") 
     #     elif movement == 'fire':
     #             print(f"fire in the hole")                                
-                
-    def configureCraneMovement(self):
+          
+    def configureMovement(self):
         
         if "motors" in self.movements:
             motors = self.movements.get('motors')

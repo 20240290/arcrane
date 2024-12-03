@@ -33,16 +33,9 @@ import subprocess, shlex
 
 utility = Utilities.Utilities()
 arcrane = Arcrane.Arcrane()
-arcrane.initialize()
 
 def gpio_task():
-    print(f"arcrane.joystick1 is none? {arcrane.joystick1 == None}") 
-    print(f"arcrane.joystick2 is none? {arcrane.joystick2 == None}") 
-    if arcrane.joystick1 != None:
-        arcrane.setUpMovements()  
-
-    if arcrane.joystick2 != None:
-        arcrane.setupMovementJoystick2()  
+    arcrane.setUpMovements()
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -98,7 +91,8 @@ def configuration():
             "j2_sideL_pin": request.form['j2_sideL_pin'],
             "j2_sideR_pin": request.form['j2_sideR_pin'],
             "j2_trigger_pin": request.form['j2_trigger_pin'],
-            "j2_fire_pin": request.form['j2_fire_pin']
+            "j2_fire_pin": request.form['j2_fire_pin'],
+            "crane_up_stop_pin": request.form['crane_up_stop_pin']
         }
         
         utility.save_configuration(data)
@@ -193,7 +187,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         # Signal all threads to stop by setting the stop event
                 # flask_thread.start()
-        # threads.append(flask_thread)stop_event.set()
+        # threads.append(flask_thread)stop_event.set()pwd
 
         print("All threads have exited. Program is shutting down.")
         print("Exiting...")

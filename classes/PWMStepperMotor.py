@@ -110,3 +110,9 @@ class PWMStepperMotor():
         sleep(float(self.motor_delay))
         self.motor_step.off()
         sleep(float(self.motor_delay))
+
+    def runMotor(self, run: bool):
+        if run:
+            self.motor_step.on()
+        else:
+            self.motor_step.off()        
