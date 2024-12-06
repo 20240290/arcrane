@@ -29,7 +29,13 @@ class PWMStepperMotor():
 
 
     #add a tag to the motor
-    def __init__(self, step: int, drive: int, direction_forward=True, reversable=False, reverse_movement = '', movement = ''):
+    def __init__(self, 
+                 step: int, 
+                 drive: int, 
+                 direction_forward=True, 
+                 reversable=False, 
+                 reverse_movement = '', 
+                 movement = ''):
         """
         Default Class initializer with that accepts the Output device pin.
 
@@ -49,8 +55,11 @@ class PWMStepperMotor():
         self.reversable = reversable
         self.reverse_movement = reverse_movement
         self.movement = movement
-        self.motor_delay = self.utility.get_configuration('step_delay')
-    
+        if movement == 'forward' or movement == 'backward':
+            self.motor_delay = self.utility.get_configuration('claw_step_delay')
+        else:   
+            self.motor_delay = self.utility.get_configuration('step_delay')
+
     def setMotor(self, step: int, drive: int, direction_forward=True):
         """
         Setup and pin out output device.

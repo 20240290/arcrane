@@ -23,8 +23,19 @@ import signal as signal
 import smbus
 import time
 import Utilities
-   
+import paho.mqtt.client as mqtt   
+
 utility = Utilities.Utilities()
+# MQTT client setup
+# client = mqtt.Client()
+# # MQTT broker details
+# BROKER = "resurgo2.local"  # Replace with the broker's IP address
+# TOPIC = "raspberry/signal"
+
+# client.connect(BROKER, port=1883, keepalive=60)
+# print("Connected to MQTT broker")
+# # Keep script running
+# client.loop_start()
 
 class Arcrane:
     _instance = None
@@ -43,7 +54,7 @@ class Arcrane:
         return cls._instance
 
     def __init__(self):
-        self.joystick = movement.DeviceMovements(
+        self.arcrane = movement.DeviceMovements(
             id ='j1',
             movements = {
             'motors': [
@@ -55,12 +66,19 @@ class Arcrane:
                 'reverse_movement': utility.get_configuration('m3_reverse_movement'),
                 'movement': utility.get_configuration('m3_movement')}, 
                 {
-                'step': utility.get_configuration('m4_step_pin'), 
-                'drive': utility.get_configuration('m4_dir_pin'), 
+                'step': utility.get_configuration('m1_step_pin'), 
+                'drive': utility.get_configuration('m1_dir_pin'), 
                 'direction': True, 
-                'reversable': utility.get_configuration('m4_reversible'), 
-                'reverse_movement': utility.get_configuration('m4_reverse_movement'),
-                'movement': utility.get_configuration('m4_movement')}, 
+                'reversable': utility.get_configuration('m1_reversible'), 
+                'reverse_movement': utility.get_configuration('m1_reverse_movement'),
+                'movement': utility.get_configuration('m1_movement')}, 
+                # {
+                # 'step': utility.get_configuration('m4_step_pin'), 
+                # 'drive': utility.get_configuration('m4_dir_pin'), 
+                # 'direction': True, 
+                # 'reversable': utility.get_configuration('m4_reversible'), 
+                # 'reverse_movement': utility.get_configuration('m4_reverse_movement'),
+                # 'movement': utility.get_configuration('m4_movement')}, 
                 {
                 'step': utility.get_configuration('m2_step_pin'), 
                 'drive': utility.get_configuration('m2_dir_pin'), 
@@ -79,17 +97,22 @@ class Arcrane:
                    'sideL': utility.get_configuration('j2_sideL_pin'), 
                    'trigger': utility.get_configuration('j2_trigger_pin'), 
                    'fire': utility.get_configuration('j2_fire_pin'), 
-                   'up_stop_pin': utility.get_configuration('crane_up_stop_pin')}])
-        print(f"self.joystick1 {self.joystick.pins}")
+                   'up_stop_pin': utility.get_configuration('crane_up_stop_pin'),
+                   'down_stop_pin': utility.get_configuration('crane_down_stop_pin'),}])
+        print(f"self.joystick1 {self.arcrane.pins}")
     
     def setupMovementJoystick2(self):
         print("setupMovementJoystick2 and monitor movements")
 
-
+    
     def setUpMovements(self):
         print("setUpMovements and monitor movements")
-        self.joystick.configureMovement()
-        self.joystick.monitorMovements()
+        self.arcrane.delegate.register_subscriber("movement", self.receive_message)
+        self.arcrane.configureMovement()
+        self.arcrane.monitorMovements() 
+
+    def receive_message(self, message):
+        print(f"Delegate message received: {message}")         
     
     def initializeI2c():
         # Create an SMBus instance
@@ -115,4 +138,4 @@ class Arcrane:
             print("stop the motor")
 
     def cleanup(self):
-       self.joystick1.cleanupDevices()     
+       self.arcrane.cleanupDevices()     

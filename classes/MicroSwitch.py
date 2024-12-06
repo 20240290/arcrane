@@ -35,17 +35,15 @@ class MicroSwitch():
         
         self.switch = Button(pin)
         self.didPressed = False
-        self.switch.when_pressed = self.on_button_pressed
-        self.switch.when_released = self.on_button_released
+        self.switch.when_pressed = self.on_button_released
+        self.switch.when_released = self.on_button_pressed
     
     # Define the function to be called when the button is pressed
     def on_button_pressed(self):
         self.didPressed = True
-        print("Switch Pressed!")
 
     # Define the function to be called when the button is released
     def on_button_released(self):
         self.didPressed = False
-        print("Switch Released!")
-
+        
     

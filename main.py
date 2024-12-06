@@ -31,8 +31,14 @@ import time
 import atexit
 import subprocess, shlex
 
+#Crane Utitlity Instance
 utility = Utilities.Utilities()
+
+#Crane Data Instance
 arcrane = Arcrane.Arcrane()
+
+#MQTT Server
+
 
 def gpio_task():
     arcrane.setUpMovements()
@@ -92,7 +98,11 @@ def configuration():
             "j2_sideR_pin": request.form['j2_sideR_pin'],
             "j2_trigger_pin": request.form['j2_trigger_pin'],
             "j2_fire_pin": request.form['j2_fire_pin'],
-            "crane_up_stop_pin": request.form['crane_up_stop_pin']
+            "crane_up_stop_pin": request.form['crane_up_stop_pin'],
+            "crane_down_stop_pin": request.form['crane_down_stop_pin'],
+            "crane_move_left_stop_pin": request.form['crane_move_left_stop_pin'],
+            "crane_move_right_stop_pin": request.form['crane_move_right_stop_pin'],
+            "claw_step_delay": request.form['claw_step_delay']  
         }
         
         utility.save_configuration(data)
