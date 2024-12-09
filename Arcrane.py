@@ -26,16 +26,19 @@ import Utilities
 import paho.mqtt.client as mqtt   
 
 utility = Utilities.Utilities()
-# MQTT client setup
-# client = mqtt.Client()
-# # MQTT broker details
-# BROKER = "resurgo2.local"  # Replace with the broker's IP address
-# TOPIC = "raspberry/signal"
 
-# client.connect(BROKER, port=1883, keepalive=60)
-# print("Connected to MQTT broker")
-# # Keep script running
-# client.loop_start()
+# MQTT broker details
+BROKER = "10.0.105.146"  # Replace with the broker's IP address
+TOPIC = "raspberry/signal"
+
+# MQTT client setup
+client = mqtt.Client()
+
+
+client.connect(BROKER, port=1884, keepalive=60)
+print("Connected to MQTT broker")
+# Keep script running
+client.loop_start()
 
 class Arcrane:
     _instance = None
@@ -110,9 +113,12 @@ class Arcrane:
         self.arcrane.delegate.register_subscriber("movement", self.receive_message)
         self.arcrane.configureMovement()
         self.arcrane.monitorMovements() 
+        client.publish(TOPIC, "MAKE THE MOTOR MOVE")
 
     def receive_message(self, message):
-        print(f"Delegate message received: {message}")         
+        print(f"Delegate message received: {message}")
+        client.publish(TOPIC, "MAKE THE MOTOR MOVE")
+
     
     def initializeI2c():
         # Create an SMBus instance
