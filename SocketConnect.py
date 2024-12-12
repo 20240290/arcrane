@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import time
 
 # MQTT Broker configuration
-BROKER = "10.0.105.146"  # Replace with your broker address
+BROKER = "resurgo2.local" #"10.0.105.146"  # Replace with your broker address
 PORT = 1883
 TOPIC = "raspberry/signal"  # Replace with your topic
 

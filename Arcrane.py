@@ -28,14 +28,13 @@ import paho.mqtt.client as mqtt
 utility = Utilities.Utilities()
 
 # MQTT broker details
-BROKER = "10.0.105.146"  # Replace with the broker's IP address
+BROKER = "resurgo2.local"  # Replace with the broker's IP address
 TOPIC = "raspberry/signal"
 
 # MQTT client setup
 client = mqtt.Client()
 
-
-client.connect(BROKER, port=1884, keepalive=60)
+client.connect(BROKER, port=1883, keepalive=60)
 print("Connected to MQTT broker")
 # Keep script running
 client.loop_start()
@@ -101,7 +100,10 @@ class Arcrane:
                    'trigger': utility.get_configuration('j2_trigger_pin'), 
                    'fire': utility.get_configuration('j2_fire_pin'), 
                    'up_stop_pin': utility.get_configuration('crane_up_stop_pin'),
-                   'down_stop_pin': utility.get_configuration('crane_down_stop_pin'),}])
+                   'down_stop_pin': utility.get_configuration('crane_down_stop_pin'),
+                   'left_stop_pin': utility.get_configuration('crane_move_left_stop_pin'),
+                   'right_stop_pin': utility.get_configuration('crane_move_right_stop_pin'),
+                   }])
         print(f"self.joystick1 {self.arcrane.pins}")
     
     def setupMovementJoystick2(self):

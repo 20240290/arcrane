@@ -77,7 +77,10 @@ class Utilities:
         self.config['Settings']['j2_sideR_pin'] = params['j2_sideR_pin']
         self.config['Settings']['j2_trigger_pin'] = params['j2_trigger_pin']
         self.config['Settings']['j2_fire_pin'] = params['j2_fire_pin']
+        self.config['Settings']['crane_move_left_stop_pin'] = params['crane_move_left_stop_pin']
+        self.config['Settings']['crane_move_right_stop_pin'] = params['crane_move_right_stop_pin']
         self.config['Settings']['crane_up_stop_pin'] = params['crane_up_stop_pin']
+        self.config['Settings']['crane_down_stop_pin'] = params['crane_down_stop_pin']
         self.config['Settings']['claw_step_delay'] = params['claw_step_delay']
 
         #write to configuration file

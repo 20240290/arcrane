@@ -190,12 +190,22 @@
                 <div class="form-group">
                   <div class="group-field ">
                     <label for="rotation_speed">Left</label>
-                    <input type="text" id="left_stop_pin" name="left_stop_pin" value="{{ config['left_stop_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="crane_move_left_stop_pin" name="crane_move_left_stop_pin" value="{{ config['crane_move_left_stop_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                   
                   <div class="group-field ">
                     <label for="rotation_speed">Right</label>
-                    <input type="text" id="right_stop_pin" name="right_stop_pin" value="{{ config['right_stop_pin'] }}" placeholder="PIN" class="text-input">
+                    <input type="text" id="crane_move_right_stop_pin" name="crane_move_right_stop_pin" value="{{ config['crane_move_right_stop_pin'] }}" placeholder="PIN" class="text-input">
+                  </div>
+
+                  <div class="group-field ">
+                    <label for="rotation_speed">Top</label>
+                    <input type="text" id="crane_up_stop_pin" name="crane_up_stop_pin" value="{{ config['crane_up_stop_pin'] }}" placeholder="PIN" class="text-input">
+                  </div>
+
+                  <div class="group-field ">
+                    <label for="rotation_speed">Down</label>
+                    <input type="text" id="crane_down_stop_pin" name="crane_down_stop_pin" value="{{ config['crane_down_stop_pin'] }}" placeholder="PIN" class="text-input">
                   </div>
                 </div>
               </div>

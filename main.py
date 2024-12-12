@@ -102,7 +102,7 @@ def configuration():
             "crane_down_stop_pin": request.form['crane_down_stop_pin'],
             "crane_move_left_stop_pin": request.form['crane_move_left_stop_pin'],
             "crane_move_right_stop_pin": request.form['crane_move_right_stop_pin'],
-            "claw_step_delay": request.form['claw_step_delay']  
+            "claw_step_delay": request.form['claw_step_delay']
         }
         
         utility.save_configuration(data)
@@ -189,8 +189,8 @@ if __name__ == '__main__':
         #threads = []
 
         # Start Flask in a separate thread
-        #flask_thread = threading.Thread(target=run_flask)
-        #flask_thread.start()
+        flask_thread = threading.Thread(target=run_flask)
+        flask_thread.start()
         #threads.append(flask_thread)
         gpio_task()
 
