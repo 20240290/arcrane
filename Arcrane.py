@@ -115,11 +115,11 @@ class Arcrane:
         self.arcrane.delegate.register_subscriber("movement", self.receive_message)
         self.arcrane.configureMovement()
         self.arcrane.monitorMovements() 
-        client.publish(TOPIC, "MAKE THE MOTOR MOVE")
+        #client.publish(TOPIC, "MAKE THE MOTOR MOVE")
 
     def receive_message(self, message):
         print(f"Delegate message received: {message}")
-        client.publish(TOPIC, "MAKE THE MOTOR MOVE")
+        client.publish(TOPIC, message)
 
     
     def initializeI2c():

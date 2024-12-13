@@ -284,7 +284,7 @@ class DeviceMovements:
                         backward_motor.rotate_motor2(backward_motor.direction_forward)
                 
             elif self.joystick2_right_movement.is_active:
-                print("joystick 2 right movement")
+                self.delegate.notify_subscriber("movement", "TURN_CLAW_RIGHT")
                 
             elif self.joystick2_up_movement.is_active:
                 print("joystick 2 forward movement")
@@ -298,11 +298,13 @@ class DeviceMovements:
                         foward_motor.rotate_motor2(foward_motor.direction_forward)                
             elif self.joystick2_left_movement.is_active:
                 print("jpystick 2 left movement")
-                self.delegate.notify_subscriber("movement", "CALL METHOD FROM ANOTHER CLASS")
+                self.delegate.notify_subscriber("movement", "TURN_CLAW_LEFT")
             elif self.joystick2_trigger_button.is_active:
+                self.delegate.notify_subscriber("movement", "STOP_MOTORS")
                 print(f"pingiw pingiw bang bang ") 
             elif self.joystick2_fire_button.is_active:
-                print(f"fire in the hole")  
+                self.delegate.notify_subscriber("movement", "STOP_MOTORS")
+                print(f"fire in the hole")
                
     # def monitorWebMovements(self, movement):
     #     print(f"Web movement: {movement}")
