@@ -18,10 +18,46 @@ from gpiozero import Button
 from time import sleep
 
 class CustomButton(Button):
-    def __init__(self, pin, tag=None, id=None, **kwargs):
+    """
+    Custom gpiozero button class with additional parameter.
+    
+    Parameters:
+    -----------
+    None    
+    
+    Return:
+    -------
+    None
+    """
+    
+    def __init__(self, pin, tag=None, id=None, **kwargs):  
+        """
+        Custom gpiozero button initializer.
+        
+        Parameters:
+        -----------
+        tag: str
+            Button tag
+        id: str
+            Button identifier    
+        
+        Return:
+        -------
+        None
+        """  
         super().__init__(pin, **kwargs)
         self.tag = tag
         self.id = id
 
     def __str__(self):
+        """
+        Print addional parameters values.
+        
+        Parameters:
+        None
+
+        Return:
+        -------
+        None
+        """
         return f"Button {self.tag} on Pin {self.pin} with ID {self.id}"

@@ -18,9 +18,18 @@ from time import sleep
 import constants as const
 import Utilities as utilities
 
-""" Generic Stepper Motor Class """
-
 class PWMStepperMotor():
+    """
+    Stepper motor class that will holds the motors added.
+    
+    Parameters:
+    -----------
+    None    
+    
+    Return:
+    -------
+    None
+    """
     motor_step: OutputDevice
     motor_dir: OutputDevice
     reversable: bool
@@ -37,11 +46,22 @@ class PWMStepperMotor():
                  reverse_movement = '', 
                  movement = ''):
         """
-        Default Class initializer with that accepts the Output device pin.
+        Stepper motor class initializer that accepts the Output device pin.
 
         Parameters:
         -----------
-        None
+        step: int
+            The motor pin.
+        drive: int
+            The drive pin.
+        direction_forward: boolean
+            Boolean flag to determine the motor direction, clockwise & counter clockwise.
+        reversable: boolean           
+            Boolean flag to determine if the motor is reversable.
+        reverse_movement: str
+            Reverse movement of the motor.
+        movement: str
+            The movement associated of the motor.    
 
         Return:
         -------
@@ -107,13 +127,13 @@ class PWMStepperMotor():
 
         Parameters:
         -----------
-        None
+        direction: boolean
+            Boolean flag to determine the motor direction, clockwise & counter clockwise.
 
         Return:
         -------
         None
         """
-        """"""
         self.motor_dir.value = direction
         self.motor_step.on()
         sleep(float(self.motor_delay))
@@ -121,6 +141,18 @@ class PWMStepperMotor():
         sleep(float(self.motor_delay))
 
     def runMotor(self, run: bool):
+        """
+        Turn on & off the motor.
+
+        Parameters:
+        -----------
+        run: boolean
+            Start or stop the motor movement.
+
+        Return:
+        -------
+        None
+        """
         if run:
             self.motor_step.on()
         else:

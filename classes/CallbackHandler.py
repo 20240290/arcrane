@@ -15,22 +15,62 @@
  """
 
 class CallbackHandler:
+    """
+    Publisher / Subscriber Class to send and receive messages.
+    
+    Parameters:
+    -----------
+    None
+
+    Return:
+    -------
+    None
+    """
+
     def __init__(self):
         # Dictionary to store subscribers and their callback methods
+        """
+        CallbackHandler class initializer.
+        
+        Parameters:
+        -----------
+        None
+        
+        Return:
+        -------
+        None
+        """
         self.subscribers = {}
 
     def register_subscriber(self, subscriber_id, callback):
         """
         Register a subscriber with an ID and their callback function.
-        :param subscriber_id: Unique ID for the subscriber.
-        :param callback: Function to be called when an event occurs.
+        
+        Parameters:
+        -----------
+        subscriber_id: str 
+            Unique ID for the subscriber.
+        callback: function
+            Function to be called when an event occurs.
+        
+        Return:
+        -------
+        None
         """
         self.subscribers[subscriber_id] = callback
 
     def unregister_subscriber(self, subscriber_id):
         """
         Unregister a subscriber by their ID.
-        :param subscriber_id: Unique ID of the subscriber.
+
+        Parameters:
+        -----------
+        subscriber_id: 
+            Unique ID of the subscriber.
+
+        Return:
+        -------
+        None      
         """
         if subscriber_id in self.subscribers:
             del self.subscribers[subscriber_id]
@@ -38,8 +78,17 @@ class CallbackHandler:
     def notify_subscriber(self, subscriber_id, message):
         """
         Notify a specific subscriber.
-        :param subscriber_id: The ID of the subscriber to notify.
-        :param message: The message to send to the subscriber.
+        
+        Parameters:
+        -----------
+        subscriber_id: str
+            The ID of the subscriber to notify.
+        message: str
+            The message to send to the subscriber.
+
+        Return:
+        -------
+        None    
         """
         if subscriber_id in self.subscribers:
             self.subscribers[subscriber_id](message)
@@ -49,7 +98,15 @@ class CallbackHandler:
     def notify_all(self, message):
         """
         Notify all subscribers.
-        :param message: The message to send to all subscribers.
+
+        Parameters:
+        -----------
+        message: str
+            The message to send to all subscribers.
+
+        Return:
+        -------
+        None       
         """
         for subscriber_id, callback in self.subscribers.items():
             callback(message)
