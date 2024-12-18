@@ -73,6 +73,9 @@
         document.getElementById('down').addEventListener('mousedown', () => startLongPress('down'));
         document.getElementById('left').addEventListener('mousedown', () => startLongPress('left'));
         document.getElementById('right').addEventListener('mousedown', () => startLongPress('right'));
+
+        document.getElementById('trigger').addEventListener('mousedown', () => startLongPress('trigger'));
+        document.getElementById('fire').addEventListener('mousedown', () => startLongPress('fire'));
     
         document.addEventListener('mouseup', stopLongPress);
         document.addEventListener('mouseleave', stopLongPress); // Also stop if mouse leaves the document

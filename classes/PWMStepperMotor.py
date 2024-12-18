@@ -36,7 +36,6 @@ class PWMStepperMotor():
     reverse_movement: str
     utility = utilities.Utilities()
 
-
     #add a tag to the motor
     def __init__(self, 
                  step: int, 

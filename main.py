@@ -182,9 +182,27 @@ def long_press(direction,device):
     """
     # Handle the long-press action here
     print(f"Joystick moved: {direction} device: { device }")
-    print(f"check if joystick is added: {arcrane.joystick1 != None}")
     if arcrane.arcrane != None:
-        arcrane.arcrane.monitorWebMovements(direction)
+        #convvert the receive movement depends on the device
+        if device == "crane":
+            arcrane.arcrane.monitorWebMovements(direction)
+        else:
+            movement = "forward"
+            if direction == "up":
+                movement = "forward"
+            elif direction == "down":
+                movement = "backward" 
+            elif direction == "left":
+                movement = "sideL"   
+            elif direction == "right":
+                movement = "sideR"
+            elif direction == "fire":
+                movement = "fire"
+            elif direction == "trigger"  :
+                movement = "trigger"                
+            arcrane.arcrane.monitorWebMovements(movement)
+
+        
 
     return jsonify({'status': 'success', 'direction': direction})
 

@@ -56,6 +56,9 @@ class DeviceMovements:
     motor_registry = {}
 
     delegate = CallbackHandler()
+
+    steps = 20
+    ctr = 0
     
     def __init__(self, 
                  movements: dict,
@@ -305,8 +308,11 @@ class DeviceMovements:
                     backward_motor: PWMStepperMotor = _motors[0]
                     if (backward_motor.reversable and  (self.joystick2_down_movement.tag == backward_motor.reverse_movement)):
                         backward_motor.rotate_motor2(not backward_motor.direction_forward)    
+                        #self.moveMotorBySteps(not backward_motor.direction_forward, backward_motor, 20)
                     else:
                         backward_motor.rotate_motor2(backward_motor.direction_forward)
+                        #self.moveMotorBySteps(backward_motor.direction_forward, backward_motor, 20)
+                    print(f"counter movements: {self.ctr}")    
                 
             elif self.joystick2_right_movement.is_active:
                 self.delegate.notify_subscriber("movement", "TURN_CLAW_RIGHT")
@@ -325,12 +331,21 @@ class DeviceMovements:
                 print("jpystick 2 left movement")
                 self.delegate.notify_subscriber("movement", "TURN_CLAW_LEFT")
             elif self.joystick2_trigger_button.is_active:
-                self.delegate.notify_subscriber("movement", "STOP_MOTORS")
-                print(f"pingiw pingiw bang bang ") 
+                print("jpystick 2 trigger movement")
+                self.delegate.notify_subscriber("movement", "TRIGGER")
+               
             elif self.joystick2_fire_button.is_active:
-                self.delegate.notify_subscriber("movement", "STOP_MOTORS")
-                print(f"fire in the hole")
+                print("jpystick 2 fire movement")
+                self.delegate.notify_subscriber("movement", "FIRE")
+                
 
+    def moveMotorBySteps(self, direction, motor: PWMStepperMotor, steps):
+        while self.ctr < steps:
+            
+            motor.rotate_motor2(direction) 
+            self.ctr += 1
+        else:
+            print("should stop the motor ")    
 
     def monitorWebMovements(self, movement):
         """
