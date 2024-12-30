@@ -22,7 +22,7 @@ class PWMStepperMotor():
     """
     Stepper motor class that will holds the motors added.
     
-    Parameters:
+    Args:
     -----------
     None    
     
@@ -47,7 +47,7 @@ class PWMStepperMotor():
         """
         Stepper motor class initializer that accepts the Output device pin.
 
-        Parameters:
+        Args:
         -----------
         step: int
             The motor pin.
@@ -83,7 +83,7 @@ class PWMStepperMotor():
         """
         Setup and pin out output device.
 
-        Parameters:
+        Args:
         -----------
         step: int
             - stepper pin value.
@@ -105,7 +105,7 @@ class PWMStepperMotor():
         """
         Rotate the specified motor one step.
 
-        Parameters:
+        Args:
         -----------
         None
 
@@ -124,7 +124,7 @@ class PWMStepperMotor():
         """
         Rotate the specified motor one step.
 
-        Parameters:
+        Args:
         -----------
         direction: boolean
             Boolean flag to determine the motor direction, clockwise & counter clockwise.
@@ -143,14 +143,11 @@ class PWMStepperMotor():
         """
         Turn on & off the motor.
 
-        Parameters:
-        -----------
-        run: boolean
-            Start or stop the motor movement.
+        Args:
+            run (boolean) : Start or stop the motor movement.
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         if run:
             self.motor_step.on()

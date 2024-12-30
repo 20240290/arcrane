@@ -23,19 +23,16 @@ import signal as signal
 from classes.MicroSwitch import MicroSwitch
 from classes.CallbackHandler import CallbackHandler
 
-""" """
 
 class DeviceMovements:
     """
     Device movements class that will holds the motors added.
     
-    Parameters:
-    -----------
-    None    
+    Args:
+        None    
     
-    Return:
-    -------
-    None
+    Returns:
+        None
     """
     down_movement: CustomButton
     up_movement: CustomButton
@@ -59,7 +56,8 @@ class DeviceMovements:
 
     steps = 20
     ctr = 0
-    
+    last_state = ""
+
     def __init__(self, 
                  movements: dict,
                  pins: list, 
@@ -67,18 +65,13 @@ class DeviceMovements:
         """
         Class initializer for the arcrane movements.
         
-        Parameters:
-        -----------
-        movement: dict
-            Dictionary data and movements object.
-        pins: list
-            List of gpiozero pins.
-        id: str
-            Identifier of the object.    
+        Args:
+            movement (dict) : Dictionary data and movements object.
+            pins (list) : List of gpiozero pins.
+            id (str) : Identifier of the object.    
         
-        Return:
-        -------
-        None
+        Returns:
+            None
         """  
         self.id = id
         self.movements = movements
@@ -90,13 +83,11 @@ class DeviceMovements:
         """
         Setup the joystick movements.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         print(f"setUpJoystickMovement : { id }")
         for devices in self.pins:
@@ -110,18 +101,13 @@ class DeviceMovements:
         """
         Configure the joystick movements and its corresponding GPIO Button.
 
-        Parameters:
-        -----------
-        movement: str
-            Movement of indicator (up,down,left,right)
-        pin: int
-            GPIO pin
-        id: str
-            Joystick identifier        
+        Args:
+            movement (str) : Movement of indicator (up,down,left,right)
+            pin (int) : GPIO pin
+            id (str) : Joystick identifier        
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
 
         print(f"addMovement movement: {movement} pin : {pin} id: {self.id}")
@@ -160,14 +146,16 @@ class DeviceMovements:
         """
         Monitor the arcrane movements.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
         Return:
-        -------
-        None
+            None
         """
+
+        global last_state
+        state = ""
+
         #print(f"check motor registry : {self.motor_registry}")
         while True:
             if self.down_movement.is_active:
@@ -314,9 +302,6 @@ class DeviceMovements:
                         #self.moveMotorBySteps(backward_motor.direction_forward, backward_motor, 20)
                     print(f"counter movements: {self.ctr}")    
                 
-            elif self.joystick2_right_movement.is_active:
-                self.delegate.notify_subscriber("movement", "TURN_CLAW_RIGHT")
-                
             elif self.joystick2_up_movement.is_active:
                 print("joystick 2 forward movement")
                 if self.get_motor_by_tag(self.joystick2_up_movement.tag) != None:
@@ -329,14 +314,30 @@ class DeviceMovements:
                         foward_motor.rotate_motor2(foward_motor.direction_forward)                
             elif self.joystick2_left_movement.is_active:
                 print("jpystick 2 left movement")
-                self.delegate.notify_subscriber("movement", "TURN_CLAW_LEFT")
+                # Only send if the state has changed
+                state += "TURN_CLAW_LEFT" 
+                #self.delegate.notify_subscriber("movement", "TURN_CLAW_LEFT")
+
+            elif self.joystick2_right_movement.is_active:
+                #self.delegate.notify_subscriber("movement", "TURN_CLAW_RIGHT") 
+                state += "TURN_CLAW_RIGHT"   
+
             elif self.joystick2_trigger_button.is_active:
                 print("jpystick 2 trigger movement")
-                self.delegate.notify_subscriber("movement", "TRIGGER")
+                #self.delegate.notify_subscriber("movement", "TRIGGER")
+                state += "TRIGGER" 
                
             elif self.joystick2_fire_button.is_active:
                 print("jpystick 2 fire movement")
-                self.delegate.notify_subscriber("movement", "FIRE")
+                #self.delegate.notify_subscriber("movement", "FIRE")
+                state += "FIRE" 
+
+            if state != last_state:
+                self.delegate.notify_subscriber("movement", state)
+                last_state = state
+                sleep(0.05) 
+
+        
                 
 
     def moveMotorBySteps(self, direction, motor: PWMStepperMotor, steps):
@@ -351,14 +352,11 @@ class DeviceMovements:
         """
         Monitor movements triggered from the web interface.
 
-        Parameters:
-        -----------
-        movement: str
-            Movement of the jouystick.
+        Args:
+            movement (str) : Movement of the jouystick.
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         if movement == 'down':
             self.down_movement.is_active = True   
@@ -385,14 +383,13 @@ class DeviceMovements:
         """
         Configure the motors associated with the movement of the joystick.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
+
         if "motors" in self.movements:
             motors = self.movements.get('motors')
             for item in motors:
@@ -450,17 +447,12 @@ class DeviceMovements:
         """
         Method to check if the index is valid inside a give list.
 
-        Parameters:
-        -----------
-        lst: list
-            The source array.
-        index: int
-            The index to check.    
+        Args:
+            lst: (list) : The source array.
+            index (int) : The index to check.    
 
-        Return:
-        -------
-        Bool
-            returns the bool value.
+        Returns:
+            Bool : returns the bool value.
         """
         try:
             lst[index] 
@@ -474,16 +466,12 @@ class DeviceMovements:
         """
         Register a motor on a specific movement.
 
-        Parameters:
-        -----------
-        tag: str
-            Movement that the motor associated to.
-        motor: PWMStepperMotor
-            Stepper motor object.    
+        Args:
+            tag (str) : Movement that the motor associated to.
+            motor (PWMStepperMotor) : Stepper motor object.    
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         #print(f"registry : {self.motor_registry} register_motor motor tag :{tag}  id: {self.id}")
         #key = tag + self.id
@@ -497,15 +485,11 @@ class DeviceMovements:
         """
         Retrieve motor by the movement key
 
-        Parameters:
-        -----------
-        tag: str
-            Movement that the motor associated to.
+        Args:
+            tag (str) : Movement that the motor associated to.
         
-        Return:
-        -------
-        motor: PWMStepperMotor
-            Motor associated from the movement.
+        Returns:
+            motor (PWMStepperMotor) : Motor associated from the movement.
         """
         return self.motor_registry.get(tag)
 
@@ -513,13 +497,11 @@ class DeviceMovements:
         """
         Turn off stepper motors.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
         
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         for k,v in self.motor_registry:
             if v is PWMStepperMotor:

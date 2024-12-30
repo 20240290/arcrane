@@ -21,29 +21,23 @@ class CustomButton(Button):
     """
     Custom gpiozero button class with additional parameter.
     
-    Parameters:
-    -----------
-    None    
+    Args:
+        None    
     
-    Return:
-    -------
-    None
+    Returns:
+        None
     """
     
     def __init__(self, pin, tag=None, id=None, **kwargs):  
         """
         Custom gpiozero button initializer.
         
-        Parameters:
-        -----------
-        tag: str
-            Button tag
-        id: str
-            Button identifier    
+        Args:
+        tag (str) : Button tag
+        id (str) : Button identifier    
         
-        Return:
-        -------
-        None
+        Returns:
+            None
         """  
         super().__init__(pin, **kwargs)
         self.tag = tag
@@ -53,11 +47,10 @@ class CustomButton(Button):
         """
         Print addional parameters values.
         
-        Parameters:
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         return f"Button {self.tag} on Pin {self.pin} with ID {self.id}"

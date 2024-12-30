@@ -41,13 +41,11 @@ def craneSetup():
     """
     Setup crane movements.
 
-    Parameters:
-    -----------
-    None
+    Args:
+        None
 
-    Return:
-    -------
-    None
+    Returns:
+        None
     """
     arcrane.setUpMovements()
 
@@ -64,13 +62,11 @@ def index():
     """
     Web portal home page
 
-    Parameters:
-    -----------
-    None
+    Args:
+        None
 
-    Return:
-    -------
-    index.html page.
+    Returns:
+        web page : index.html
     """
     return render_template("index.html")
 
@@ -80,13 +76,11 @@ def configuration():
     """
     Configurations page.
 
-    Parameters:
-    -----------
-    None
+    Args:
+        None
 
-    Return:
-    -------
-    configuration.html page
+    Returns:
+        web page : configuration.html 
     """
     #read config.ini file
     utility.config.read('config.ini')  
@@ -153,13 +147,11 @@ def joystick():
     """
     Configurations page.
 
-    Parameters:
-    -----------
-    None
+    Args:
+        None
 
-    Return:
-    -------
-    configuration.html page
+    Returns:
+        web page : configuration.html
     """
     #setup motors from arcrane module
     return render_template("joystick.html")
@@ -170,7 +162,7 @@ def long_press(direction,device):
     """
     Method to handle the long press gesture and correspond to the movement of the joystick.
 
-    Parameters:
+    Args:
     -----------
     direction: str
         - The direction of the joystick
@@ -213,7 +205,7 @@ def run_flask():
     """
     Initialize flask instance.
 
-    Parameters:
+    Args:
     -----------
     None
 

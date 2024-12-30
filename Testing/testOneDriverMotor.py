@@ -7,7 +7,7 @@ class PWMStepperMotorTest():
         """
         Default Class initializer with that accepts the Output device pin.
 
-        Parameters:
+        Args:
         -----------
         None
 
@@ -28,7 +28,7 @@ class PWMStepperMotorTest():
         """
         Setup and pin out output device.
 
-        Parameters:
+        Args:
         -----------
         step: int
             - stepper pin value.
@@ -48,7 +48,7 @@ class PWMStepperMotorTest():
         """
         Rotate the specified motor one step.
 
-        Parameters:
+        Args:
         -----------
         None
 

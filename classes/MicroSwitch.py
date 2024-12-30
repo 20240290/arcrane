@@ -24,13 +24,11 @@ class MicroSwitch():
         """
         Class initializer that accepts the Servo device pin.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         
         self.switch = Button(pin)
@@ -43,13 +41,11 @@ class MicroSwitch():
         """
         Action when button is pressed.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         self.didPressed = True
 
@@ -58,13 +54,11 @@ class MicroSwitch():
         """
         Action when button is released.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         self.didPressed = False
         
