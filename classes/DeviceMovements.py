@@ -34,6 +34,7 @@ class DeviceMovements:
     Returns:
         None
     """
+    #joystick movements
     down_movement: CustomButton
     up_movement: CustomButton
     right_movement: CustomButton
@@ -46,12 +47,16 @@ class DeviceMovements:
     joystick2_trigger_button: CustomButton
     joystick2_fire_button: CustomButton
 
+    #switches
     mUpSwitch: MicroSwitch
     mDownSwitch: MicroSwitch
     mLeftSwitch: MicroSwitch
     mRightSwitch: MicroSwitch
+    
+    #motor registry to hold the motors associated with movement
     motor_registry = {}
 
+    #callback handler
     delegate = CallbackHandler()
 
     steps = 20

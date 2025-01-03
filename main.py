@@ -13,7 +13,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
-
 import sys
 import subprocess
 import shutil
@@ -23,12 +22,12 @@ import logging
 import classes.DeviceMovements as movement
 import Arcrane as Arcrane
 import Utilities
-import multiprocessing
 import threading
 import time
 import atexit
-import subprocess, shlex
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+import webbrowser
+
 
 #Crane Utitlity Instance
 utility = Utilities.Utilities()
@@ -163,14 +162,11 @@ def long_press(direction,device):
     Method to handle the long press gesture and correspond to the movement of the joystick.
 
     Args:
-    -----------
-    direction: str
-        - The direction of the joystick
-    device: str     
-        - The joystick selected.
-    Return:
-    -------
-    status message.
+        direction (str) : The direction of the joystick
+        device (str) : The joystick selected.
+    
+    Returns:
+        str : status message
     """
     # Handle the long-press action here
     print(f"Joystick moved: {direction} device: { device }")
@@ -206,12 +202,10 @@ def run_flask():
     Initialize flask instance.
 
     Args:
-    -----------
-    None
+        None
 
-    Return:
-    -------
-    None
+    Returns:
+        None
     """
     app.run(threaded=True)
 
@@ -220,27 +214,156 @@ def worker():
         print("Working...")
         time.sleep(1)
     print("Thread exiting gracefully...")
-     
+    
+# def check_dependencies():
+#     """
+#     Method to check if the necessary dependencies are installed and let the user know that it needs to be installed.
 
-if __name__ == '__main__':
+#     Args:
+#         None
+
+#     Returns:
+#         Bool : Check if all dependencies are installed.
+#     """
+#     missing_dependencies = []
+
+#     try:
+#         import Flask
+#         print("Flask library is installed")
+#     except ImportError:
+#        missing_dependencies.append('Flask')
+
+#     try:
+#         import paho.mqtt.client
+#         print("paho.mqtt.client library is installed")
+
+#     except ImportError:
+#        missing_dependencies.append('mosquitto')
+#        missing_dependencies.append('mosquitto-clients')
+#        missing_dependencies.append('paho-mqtt')
+
+#     if len(missing_dependencies) == 0:
+#         return True
+#     else:
+#         for item in missing_dependencies:
+#             install(item)
+#         else:
+#             return True    
+    
+# def install(package):
+#     """
+#     Install a specific package.
+
+#     Args:
+#         None
+
+#     Returns:
+#         None
+#     """
+#     try:
+#         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+#         print(f"Successfully installed {package}")
+#     except subprocess.CalledProcessError as e:
+#         print(f"Failed to install {package}: {e}")
+
+def enable_mosquitto_at_boot():
     try:
-        #list of threads
-        threads = []
+        # Check if Mosquitto is installed
+        result = subprocess.run(["which", "mosquitto"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            print("Mosquitto is not installed. Install it using 'sudo apt install mosquitto'.")
+            return
 
-        # Start Flask in a separate thread
-        flask_thread = threading.Thread(target=run_flask)
-        flask_thread.start()
-        threads.append(flask_thread)
-        craneSetup()
+        # Enable Mosquitto to start at boot
+        subprocess.run(["sudo", "systemctl", "enable", "mosquitto"], check=True)
+        subprocess.run(["sudo", "systemctl", "start", "mosquitto"], check=True)
+        print("Mosquitto has been enabled to start at boot and is now running.")
 
-    except KeyboardInterrupt:
-        # Signal all threads to stop by setting the stop event
-                # flask_thread.start()
-        # threads.append(flask_thread)stop_event.set()pwd
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while enabling Mosquitto: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")             
 
-        print("All threads have exited. Program is shutting down.")
-        print("Exiting...")
-    finally:
-        # cleanup()
-        print("clean up")
-        #sys.exit(0)
+
+def check_dependencies(dependencies):
+    """Check if the required dependencies are installed."""
+    missing = []
+    for dependency in dependencies:
+        try:
+            subprocess.run([sys.executable, "-m", dependency, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError:
+            missing.append(dependency)
+        except FileNotFoundError:
+            missing.append(dependency)
+    return missing
+
+def install_dependencies(missing):
+    """Attempt to install missing dependencies."""
+    for dependency in missing:
+        print(f"Installing {dependency}...")
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", dependency], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Failed to install {dependency}. Please install it manually.")
+            return False
+    return True
+
+def main():
+    """Main function to run the app."""
+    # Define required dependencies
+    dependencies = ["flask", "mosquitto", "mosquitto-clients", "paho-mqtt"]
+    
+    print("Checking dependencies...")
+    missing = check_dependencies(dependencies)
+
+    if missing:
+        print(f"The following dependencies are missing: {', '.join(missing)}")
+        install = input("Would you like to attempt to install them now? (yes/no): ").strip().lower()
+        if install in ['yes', 'y']:
+            if not install_dependencies(missing):
+                print("Dependency installation failed. Exiting.")
+                sys.exit(1)
+        else:
+            print("Dependencies are missing. Exiting.")
+            sys.exit(1)
+
+    print("All dependencies are installed!")
+    # Open a browser to a specific URL
+    url = "http://localhost:5000"
+    print(f"Launching browser to {url}...")
+    threads = []
+
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+    threads.append(flask_thread)
+    craneSetup()
+    webbrowser.open(url)
+
+
+# if __name__ == '__main__':
+#     try:
+#         if check_dependencies():
+#             #list of threads
+#             threads = []
+
+#             # Start Flask in a separate thread
+#             flask_thread = threading.Thread(target=run_flask)
+#             flask_thread.start()
+#             threads.append(flask_thread)
+#             craneSetup()
+
+#     except KeyboardInterrupt:
+#         # Signal all threads to stop by setting the stop event
+#                 # flask_thread.start()
+#         # threads.append(flask_thread)stop_event.set()pwd
+
+#         print("All threads have exited. Program is shutting down.")
+#         print("Exiting...")
+#     finally:
+#         # cleanup()
+#         print("clean up")
+#         #sys.exit(0)
+
+if __name__ == "__main__":
+    main()

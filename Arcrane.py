@@ -22,6 +22,16 @@ import Utilities
 import paho.mqtt.client as mqtt   
 
 class Arcrane:
+    """
+    A class that will initialize all the crane movements and devices.
+
+    Args:
+        None
+
+    Returns:
+        None 
+    """
+
     _instance = None
     
     #utility module
@@ -40,11 +50,31 @@ class Arcrane:
     client.loop_start()
 
     def __new__(cls, *args, **kwargs):
+        """
+        Class initializer for new instance.
+
+        Args:
+            cls (Class) : pointer.
+            args (dict) : class arguments.
+            kwargs (dict) : additional parameters.
+
+        Returns:
+            instance : Class instance 
+        """
         if not cls._instance:
             cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self):
+        """
+        Initiliazed movements for the crane and its devices.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
         self.arcrane = movement.DeviceMovements(
             id ='j1',
             movements = {
@@ -95,20 +125,52 @@ class Arcrane:
                    }])
         print(f"self.joystick1 {self.arcrane.pins}")
     
-    def setupMovementJoystick2(self):
-        print("setupMovementJoystick2 and monitor movements")
-
-    
     def setUpMovements(self):
+        """
+        Setup the motors and monitor the movements.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
         print("setUpMovements and monitor movements")
+        
+        #register callback handler
         self.arcrane.delegate.register_subscriber("movement", self.receive_message)
+        
+        #configure motors
         self.arcrane.configureMovement()
+        
+        #monitor joystick and motor movements
         self.arcrane.monitorMovements() 
 
 
     def receive_message(self, message):
+        """
+        Method that receives the mesages from the callback handler.
+
+        Args:
+            message (str) : The action message.
+
+        Returns:
+            None 
+        """
         print(f"Delegate message received: {message}")
+
+        #publish to the mqtt subscriber
         self.client.publish(self.TOPIC, message)
 
     def cleanup(self):
-       self.arcrane.cleanupDevices()     
+        """
+        Stop the motors movement.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
+        #arcrane movement install to call clean up devices.
+        self.arcrane.cleanupDevices()     

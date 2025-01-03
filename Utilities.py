@@ -18,16 +18,35 @@
 import constants as const
 from configparser import ConfigParser
 import json
-import lgpio
 import time
 
 #utility class
 class Utilities:
+    """
+    This class is used to save and load the configuration settings.
+
+    Args:
+        None
+
+    Returns:
+        None 
+    """
     _instance = None
     config = ConfigParser()
     
     #class initializer
     def __new__(cls, *args, **kwargs):
+        """
+        Class initializer for new instance.
+
+        Args:
+            cls (Class) : pointer.
+            args (dict) : class arguments.
+            kwargs (dict) : additional parameters.
+
+        Returns:
+            instance : Class instance 
+        """
         if not cls._instance:
             cls._instance = super(Utilities, cls).__new__(cls)
             # Initialize any attributes you want here
@@ -36,8 +55,15 @@ class Utilities:
     
     #save configuration files
     def save_configuration(self, params: dict):
-        test = params.get('m1_reversible') 
-        print(f'save checkbox : { test }')
+        """
+        Save configuration settings.
+
+        Args:
+            params (dict) : Parameters in dictionary to save the settings.
+
+        Returns:
+            dict : Updated settings. 
+        """
         self.config.read('config.ini')  
         self.config['Settings']['steps_per_revolution'] = params['steps_per_revolution']
         self.config['Settings']['degrees_per_step'] = params['degrees_per_step']
@@ -90,44 +116,17 @@ class Utilities:
     
     #get configuration settings
     def get_configuration(self, param):
+        """
+        Get the specific configuration setting.
+
+        Args:
+            params (str) : Setting name.
+
+        Returns:
+            str : value. 
+        """
         self.config.read('config.ini')
         val = self.config["Settings"][param]
         print(f"param config: {param}")
         print(f"get config: {val}")
         return self.config["Settings"][param]
-
-    #load default configurations
-    def loadDefaultConfiguration(self):
-        self.config.read('config.ini')
-        with open('config.ini', 'r') as file:
-            self.config = json.load({"SETTINGS": {
-               "steps_per_revolution": const.STEPS_PER_REVOLUTION,
-               "degrees_per_step":  const.DEGREES_PER_STEP,
-                "steps_per_90_degrees": const.STEPS_PER_90_DEGREES,
-                "step_delay": const.STEP_DELAY,
-                "m1_step_pin": const.M1_STEP_PIN,
-                "m1_dir_pin": const.M1_DIR_PIN,
-                "m2_step_pin": const.M2_STEP_PIN,
-                "m2_dir_pin": const.M2_DIR_PIN,
-                "m3_step_pin": const.M3_STEP_PIN,
-                "m3_dir_pin": const.M3_DIR_PIN,
-                "m4_step_pin": const.M4_STEP_PIN,
-                "m4_dir_pin": const.M4_DIR_PIN
-            }})
-
-            return self.config
-
-    #clear gpio pin
-    def clearGPIOPin(self,pin):
-        try:
-            chip = lgpio.gpiochip_open(0)
-            # Claim the pin as an output
-            lgpio.gpio_claim_output(chip, pin)
-
-            # Set the pin high
-            lgpio.gpio_write(chip, pin, 1)  # Set high
-            # Set the pin low
-            lgpio.gpio_write(chip, pin, 0)  # Set low
-
-        finally:
-            lgpio.gpiochip_close(chip) 
