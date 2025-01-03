@@ -1,0 +1,9 @@
+site_name: Resurgo Arcrane Documentation
+nav:
+  - Home: index.md
+  - Classes:
+      - Device Movements: reference/DeviceMovements.md
+
+plugins:
+  - search
+  - mkdocstrings

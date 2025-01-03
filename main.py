@@ -311,7 +311,7 @@ def install_dependencies(missing):
 def main():
     """Main function to run the app."""
     # Define required dependencies
-    dependencies = ["flask", "mosquitto", "mosquitto-clients", "paho-mqtt"]
+    dependencies = ["gpiozero","flask", "mosquitto", "mosquitto-clients", "paho-mqtt"]
     
     print("Checking dependencies...")
     missing = check_dependencies(dependencies)
