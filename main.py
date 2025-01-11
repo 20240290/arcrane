@@ -20,7 +20,7 @@ from pathlib import Path
 import constants as const
 import logging
 import classes.DeviceMovements as movement
-import Arcrane as Arcrane
+import Arcrane
 import Utilities
 import threading
 import time
@@ -30,10 +30,10 @@ import webbrowser
 
 
 #Crane Utitlity Instance
-utility = Utilities.Utilities()
+utility: Utilities = Utilities()
 
 #Crane Data Instance
-arcrane = Arcrane.Arcrane()
+arcrane: Arcrane = Arcrane()
 
 #Arcrane Setup Movements
 def craneSetup():

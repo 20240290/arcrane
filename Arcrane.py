@@ -14,7 +14,6 @@
  limitations under the License.
  """
 
-import constants as const
 import classes.DeviceMovements as movement
 import classes.MicroSwitch as switch
 import signal as signal
