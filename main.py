@@ -14,26 +14,35 @@
  limitations under the License.
  """
 import sys
+import os
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
+from classes.DeviceMovements import DeviceMovements
 import subprocess
 import shutil
 from pathlib import Path
-import constants as const
 import logging
-import classes.DeviceMovements as movement
-import Arcrane
-import Utilities
 import threading
 import time
 import atexit
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import webbrowser
+import LazyLoader as loader
 
 
-#Crane Utitlity Instance
-utility: Utilities = Utilities()
+
+# utility: Utilities = Utilities()
+
+# arcrane: Arcrane = Arcrane()
 
 #Crane Data Instance
-arcrane: Arcrane = Arcrane()
+utility = loader.LazyLoader.get_utility()
+
+#Crane Utitlity Instance
+arcrane = loader.LazyLoader.get_arcrane()
 
 #Arcrane Setup Movements
 def craneSetup():
@@ -311,7 +320,7 @@ def install_dependencies(missing):
 def main():
     """Main function to run the app."""
     # Define required dependencies
-    dependencies = ["gpiozero","flask", "mosquitto", "mosquitto-clients", "paho-mqtt"]
+    dependencies = ["gpiozero","flask", "mosquitto", "mosquitto-clients", "paho-mqtt", "paho.mqtt.client"]
     
     print("Checking dependencies...")
     missing = check_dependencies(dependencies)
