@@ -39,10 +39,10 @@ import LazyLoader as loader
 # arcrane: Arcrane = Arcrane()
 
 #Crane Data Instance
-utility = loader.LazyLoader.get_utility()
+
 
 #Crane Utitlity Instance
-arcrane = loader.LazyLoader.get_arcrane()
+
 
 #Arcrane Setup Movements
 def craneSetup():
@@ -55,6 +55,7 @@ def craneSetup():
     Returns:
         None
     """
+    arcrane = loader.LazyLoader.get_arcrane()
     arcrane.setUpMovements()
 
 
@@ -91,6 +92,7 @@ def configuration():
         web page : configuration.html 
     """
     #read config.ini file
+    utility = loader.LazyLoader.get_utility()
     utility.config.read('config.ini')  
 
     #check request method
@@ -179,6 +181,7 @@ def long_press(direction,device):
     """
     # Handle the long-press action here
     print(f"Joystick moved: {direction} device: { device }")
+    arcrane = loader.LazyLoader.get_arcrane()
     if arcrane.arcrane != None:
         #convvert the receive movement depends on the device
         if device == "crane":
@@ -224,56 +227,6 @@ def worker():
         time.sleep(1)
     print("Thread exiting gracefully...")
     
-# def check_dependencies():
-#     """
-#     Method to check if the necessary dependencies are installed and let the user know that it needs to be installed.
-
-#     Args:
-#         None
-
-#     Returns:
-#         Bool : Check if all dependencies are installed.
-#     """
-#     missing_dependencies = []
-
-#     try:
-#         import Flask
-#         print("Flask library is installed")
-#     except ImportError:
-#        missing_dependencies.append('Flask')
-
-#     try:
-#         import paho.mqtt.client
-#         print("paho.mqtt.client library is installed")
-
-#     except ImportError:
-#        missing_dependencies.append('mosquitto')
-#        missing_dependencies.append('mosquitto-clients')
-#        missing_dependencies.append('paho-mqtt')
-
-#     if len(missing_dependencies) == 0:
-#         return True
-#     else:
-#         for item in missing_dependencies:
-#             install(item)
-#         else:
-#             return True    
-    
-# def install(package):
-#     """
-#     Install a specific package.
-
-#     Args:
-#         None
-
-#     Returns:
-#         None
-#     """
-#     try:
-#         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-#         print(f"Successfully installed {package}")
-#     except subprocess.CalledProcessError as e:
-#         print(f"Failed to install {package}: {e}")
 
 def enable_mosquitto_at_boot():
     try:
@@ -320,8 +273,10 @@ def install_dependencies(missing):
 def main():
     """Main function to run the app."""
     # Define required dependencies
-    dependencies = ["gpiozero","flask", "mosquitto", "mosquitto-clients", "paho-mqtt", "paho.mqtt.client"]
+    dependencies = ["gpiozero","flask", "paho-mqtt", "paho.mqtt.client"]
     
+    #you need to manually install these 2 dependencies using "sudo apt install mosquitto mosquitto-clients" 
+
     print("Checking dependencies...")
     missing = check_dependencies(dependencies)
 
@@ -347,32 +302,9 @@ def main():
     flask_thread.start()
     threads.append(flask_thread)
     craneSetup()
+    enable_mosquitto_at_boot()
     webbrowser.open(url)
 
-
-# if __name__ == '__main__':
-#     try:
-#         if check_dependencies():
-#             #list of threads
-#             threads = []
-
-#             # Start Flask in a separate thread
-#             flask_thread = threading.Thread(target=run_flask)
-#             flask_thread.start()
-#             threads.append(flask_thread)
-#             craneSetup()
-
-#     except KeyboardInterrupt:
-#         # Signal all threads to stop by setting the stop event
-#                 # flask_thread.start()
-#         # threads.append(flask_thread)stop_event.set()pwd
-
-#         print("All threads have exited. Program is shutting down.")
-#         print("Exiting...")
-#     finally:
-#         # cleanup()
-#         print("clean up")
-#         #sys.exit(0)
 
 if __name__ == "__main__":
     main()

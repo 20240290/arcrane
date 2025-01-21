@@ -14,6 +14,12 @@
  limitations under
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 class CallbackHandler:
     """
     Publisher / Subscriber Class to send and receive messages.

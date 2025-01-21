@@ -14,9 +14,13 @@
  limitations under
  """
 
-from gpiozero import Button
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from time import sleep
-import constants as const
 from classes.PWMStepperMotor import PWMStepperMotor
 from classes.CustomButton import CustomButton
 import signal as signal

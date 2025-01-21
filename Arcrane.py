@@ -14,7 +14,14 @@
  limitations under the License.
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 import classes.DeviceMovements as movement
+#from classes.DeviceMovements import DeviceMovements
 import classes.MicroSwitch as switch
 import signal as signal
 import Utilities
@@ -33,20 +40,19 @@ class Arcrane:
 
     _instance = None
     
-    #utility module
-    utility = Utilities.Utilities()
+    # #utility module
+    # utility = Utilities.Utilities()
+    # # MQTT broker details
+    # BROKER = "resurgo2.local"
+    # TOPIC = "raspberry/signal"
 
-    # MQTT broker details
-    BROKER = "resurgo2.local"
-    TOPIC = "raspberry/signal"
+    # # MQTT client setup
+    # client = mqtt.Client()
 
-    # MQTT client setup
-    client = mqtt.Client()
-
-    client.connect(BROKER, port=1883, keepalive=60)
-    print("Connected to MQTT broker")
-    # Keep script running
-    client.loop_start()
+    # client.connect(BROKER, port=1883, keepalive=60)
+    # print("Connected to MQTT broker")
+    # # Keep script running
+    # client.loop_start()
 
     def __new__(cls, *args, **kwargs):
         """

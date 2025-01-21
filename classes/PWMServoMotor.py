@@ -14,6 +14,12 @@
  limitations under the License.
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from gpiozero import Servo
 from time import sleep
 import constants as const

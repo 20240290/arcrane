@@ -13,6 +13,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
+
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from gpiozero import OutputDevice
 from time import sleep
 import constants as const
