@@ -31,11 +31,11 @@ Libraries and Frameworks:
 3. Features to Implement
 
 Basic Crane Control:
-    •  Motorized movement controlled via GPIO pins.
+•  Motorized movement controlled via GPIO pins.    
 Live Feed
-    •  A camera to see how the crane moves.    
+•  A camera to see how the crane moves.    
 Remote Access:
-    •  Control the crane from anywhere using a secure web.
+•  Control the crane from anywhere using a secure web.
 
 4. Safety and Optimization
     • Optimize network bandwidth and latency for smooth IoT operations.
