@@ -25,7 +25,7 @@ import classes.DeviceMovements as movement
 import classes.MicroSwitch as switch
 import signal as signal
 import Utilities
-import paho.mqtt.client as mqtt   
+import MqttClient
 
 class Arcrane:
     """
@@ -41,7 +41,8 @@ class Arcrane:
     _instance = None
     
     # #utility module
-    # utility = Utilities.Utilities()
+    utility = Utilities.Utilities()
+    client = MqttClient.MqttClient()  
     # # MQTT broker details
     # BROKER = "resurgo2.local"
     # TOPIC = "raspberry/signal"
@@ -149,7 +150,10 @@ class Arcrane:
         self.arcrane.configureMovement()
         
         #monitor joystick and motor movements
-        self.arcrane.monitorMovements() 
+        self.arcrane.monitorMovements()
+
+        #subscribe to mqtt client
+        self.client.subscribe_to_topic() 
 
 
     def receive_message(self, message):
@@ -165,7 +169,8 @@ class Arcrane:
         print(f"Delegate message received: {message}")
 
         #publish to the mqtt subscriber
-        self.client.publish(self.TOPIC, message)
+        #self.client.publish(self.TOPIC, message)
+        self.client.publish_message(message)
 
     def cleanup(self):
         """

@@ -20,28 +20,93 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # Add the parent directory to sys.path
 sys.path.append(script_dir)
 
-from classes.DeviceMovements import DeviceMovements
 import subprocess
-import shutil
 from pathlib import Path
 import logging
 import threading
 import time
 import atexit
+
+def check_dependencies(dependencies):
+    """Check if the required dependencies are installed."""
+    missing = []
+    for dependency in dependencies:
+        try:
+            subprocess.run([sys.executable, "-m", dependency, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError:
+            missing.append(dependency)
+        except FileNotFoundError:
+            missing.append(dependency)
+    return missing
+
+def install_mosquitto():
+    try:
+        # Run the 'sudo apt install mosquitto mosquitto-clients' command
+        subprocess.run(['sudo', 'apt', 'install', '-y', 'mosquitto', 'mosquitto-clients'], check=True)
+        print("Mosquitto and Mosquitto clients have been installed successfully.")
+        enable_mosquitto_at_boot()
+    except subprocess.CalledProcessError as e:
+        print(f"Error during installation: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+# Call the function to install Mosquitto
+install_mosquitto()
+
+
+def install_dependencies(missing):
+    """Attempt to install missing dependencies."""
+    for dependency in missing:
+        print(f"Installing {dependency}...")
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", dependency], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Failed to install {dependency}. Please install it manually.")
+            return False
+    return True
+
+def enable_mosquitto_at_boot():
+    try:
+        # Check if Mosquitto is installed
+        result = subprocess.run(["which", "mosquitto"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            print("Mosquitto is not installed. Install it using 'sudo apt install mosquitto'.")
+            return
+
+        # Enable Mosquitto to start at boot
+        subprocess.run(["sudo", "systemctl", "enable", "mosquitto"], check=True)
+        subprocess.run(["sudo", "systemctl", "start", "mosquitto"], check=True)
+        print("Mosquitto has been enabled to start at boot and is now running.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while enabling Mosquitto: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+# Define required dependencies
+dependencies = ["gpiozero","flask", "paho-mqtt"]
+
+#you need to manually install these 2 dependencies using "sudo apt install mosquitto mosquitto-clients" 
+
+print("Checking dependencies...")
+missing = check_dependencies(dependencies)
+
+if missing:
+    print(f"The following dependencies are missing: {', '.join(missing)}")
+    install = input("Would you like to attempt to install them now? (yes/no): ").strip().lower()
+    if install in ['yes', 'y']:
+        if not install_dependencies(missing):
+            print("Dependency installation failed. Exiting.")
+            sys.exit(1)
+    else:
+        print("Dependencies are missing. Exiting.")
+        sys.exit(1)
+
+install_mosquitto()
+from classes.DeviceMovements import DeviceMovements
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 import webbrowser
 import LazyLoader as loader
-
-
-
-# utility: Utilities = Utilities()
-
-# arcrane: Arcrane = Arcrane()
-
-#Crane Data Instance
-
-
-#Crane Utitlity Instance
 
 
 #Arcrane Setup Movements
@@ -63,7 +128,10 @@ logging.basicConfig(level=logging.DEBUG)
 # Shared event to signal threads to stop
 stop_event = threading.Event()
 
-app = Flask(__name__)
+try:
+    app = Flask(__name__)
+except ImportError as e:
+    print("Missing flask dependency.")
 
 #Dashboard route
 @app.route("/")
@@ -226,71 +294,9 @@ def worker():
         print("Working...")
         time.sleep(1)
     print("Thread exiting gracefully...")
-    
-
-def enable_mosquitto_at_boot():
-    try:
-        # Check if Mosquitto is installed
-        result = subprocess.run(["which", "mosquitto"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if result.returncode != 0:
-            print("Mosquitto is not installed. Install it using 'sudo apt install mosquitto'.")
-            return
-
-        # Enable Mosquitto to start at boot
-        subprocess.run(["sudo", "systemctl", "enable", "mosquitto"], check=True)
-        subprocess.run(["sudo", "systemctl", "start", "mosquitto"], check=True)
-        print("Mosquitto has been enabled to start at boot and is now running.")
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred while enabling Mosquitto: {e}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")             
-
-
-def check_dependencies(dependencies):
-    """Check if the required dependencies are installed."""
-    missing = []
-    for dependency in dependencies:
-        try:
-            subprocess.run([sys.executable, "-m", dependency, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except subprocess.CalledProcessError:
-            missing.append(dependency)
-        except FileNotFoundError:
-            missing.append(dependency)
-    return missing
-
-def install_dependencies(missing):
-    """Attempt to install missing dependencies."""
-    for dependency in missing:
-        print(f"Installing {dependency}...")
-        try:
-            subprocess.run([sys.executable, "-m", "pip", "install", dependency], check=True)
-        except subprocess.CalledProcessError:
-            print(f"Failed to install {dependency}. Please install it manually.")
-            return False
-    return True
 
 def main():
     """Main function to run the app."""
-    # Define required dependencies
-    dependencies = ["gpiozero","flask", "paho-mqtt", "paho.mqtt.client"]
-    
-    #you need to manually install these 2 dependencies using "sudo apt install mosquitto mosquitto-clients" 
-
-    print("Checking dependencies...")
-    missing = check_dependencies(dependencies)
-
-    if missing:
-        print(f"The following dependencies are missing: {', '.join(missing)}")
-        install = input("Would you like to attempt to install them now? (yes/no): ").strip().lower()
-        if install in ['yes', 'y']:
-            if not install_dependencies(missing):
-                print("Dependency installation failed. Exiting.")
-                sys.exit(1)
-        else:
-            print("Dependencies are missing. Exiting.")
-            sys.exit(1)
-
     print("All dependencies are installed!")
     # Open a browser to a specific URL
     url = "http://localhost:5000"
