@@ -17,7 +17,7 @@
 import paho.mqtt.client as mqtt
 
 class MqttClient:
-    def __init__(self, broker="resurgo2.local", topic="raspberry/signal"):
+    def __init__(self, broker:str, topic:str):
         # MQTT broker and topic setup
         self.broker = broker
         self.topic = topic
@@ -29,6 +29,9 @@ class MqttClient:
     def _setup_mqtt_client(self):
         """Initialize and connect to the MQTT broker."""
         try:
+            # Set the on_message callback
+            self.client.on_message = self.on_message
+
             # Connect to MQTT broker
             self.client.connect(self.broker, port=1883, keepalive=60)
             print("Connected to MQTT broker:", self.broker)
@@ -62,3 +65,7 @@ class MqttClient:
             print("Disconnected from MQTT broker.")
         except Exception as e:
             print("Error while disconnecting:", e)
+
+    def on_message(self, client, userdata, msg):
+        """Callback method to handle incoming messages."""
+        print(f"Received message: {msg.payload.decode()} on topic: {msg.topic}")

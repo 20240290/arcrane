@@ -42,7 +42,7 @@ class Arcrane:
     
     # #utility module
     utility = Utilities.Utilities()
-    client = MqttClient.MqttClient()  
+    client = MqttClient.MqttClient("resurgo2.local","raspberry/signal")
     # # MQTT broker details
     # BROKER = "resurgo2.local"
     # TOPIC = "raspberry/signal"

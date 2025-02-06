@@ -84,7 +84,7 @@ def enable_mosquitto_at_boot():
         print(f"An unexpected error occurred: {e}")
 
 # Define required dependencies
-dependencies = ["gpiozero","flask", "paho-mqtt"]
+dependencies = ["gpiozero","flask", "paho-mqtt", "adafruit-circuitpython-servokit"]
 
 #you need to manually install these 2 dependencies using "sudo apt install mosquitto mosquitto-clients" 
 
