@@ -40,20 +40,12 @@ class Arcrane:
 
     _instance = None
     
-    # #utility module
+    #utility module
     utility = Utilities.Utilities()
-    client = MqttClient.MqttClient("resurgo2.local","raspberry/signal")
-    # # MQTT broker details
-    # BROKER = "resurgo2.local"
-    # TOPIC = "raspberry/signal"
 
-    # # MQTT client setup
-    # client = mqtt.Client()
-
-    # client.connect(BROKER, port=1883, keepalive=60)
-    # print("Connected to MQTT broker")
-    # # Keep script running
-    # client.loop_start()
+    #MQTT instance
+    client = MqttClient.MqttClient("resurgo1.local","raspberry/signal", isBackground=True)
+    
 
     def __new__(cls, *args, **kwargs):
         """

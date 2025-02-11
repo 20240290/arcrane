@@ -20,6 +20,9 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # Add the parent directory to sys.path
 sys.path.append(script_dir)
 
+#generate a pdoc. Install pdoc (pip install pdoc) and run
+#pdoc --output-dir arcrane/docs/ResurgoArcrane arcrane
+
 import subprocess
 from pathlib import Path
 import logging
