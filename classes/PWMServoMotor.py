@@ -14,23 +14,27 @@
  limitations under the License.
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from gpiozero import Servo
 from time import sleep
 import constants as const
 
 class PWMServoMotor():
-        #add a tag to the motor
+    #add a tag to the motor
     def __init__(self, pin: int):
         """
         Default Class initializer with that accepts the Servo device pin.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         
         self.motor_servo = Servo(pin)
@@ -39,16 +43,12 @@ class PWMServoMotor():
         """
         Rotate the specified motor by position.
 
-        Parameters:
-        -----------
-        pos: int
-            - Position of the servo.
+        Args:
+            pos (int) : Position of the servo.
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
-        """"""
         # if pos == 1:
         #     self.motor_servo.min()
         # elif pos == 2:

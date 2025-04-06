@@ -14,66 +14,83 @@
  limitations under the License.
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
 
-import constants as const
 import classes.DeviceMovements as movement
-import time
+#from classes.DeviceMovements import DeviceMovements
 import classes.MicroSwitch as switch
 import signal as signal
-import smbus
-import time
 import Utilities
-import paho.mqtt.client as mqtt   
-
-utility = Utilities.Utilities()
-
-# MQTT broker details
-BROKER = "resurgo2.local"  # Replace with the broker's IP address
-TOPIC = "raspberry/signal"
-
-# MQTT client setup
-client = mqtt.Client()
-
-client.connect(BROKER, port=1883, keepalive=60)
-print("Connected to MQTT broker")
-# Keep script running
-client.loop_start()
+import MqttClient
 
 class Arcrane:
+    """
+    A class that will initialize all the crane movements and devices.
+
+    Args:
+        None
+
+    Returns:
+        None 
+    """
+
     _instance = None
-    is_portal: bool = False
-   
-    #class initializer
-    # def __new__(cls, *args, **kwargs):
-    #     if not cls._instance:
-    #         cls._instance = super(Arcrane, cls).__new__(cls)
-    #         cls._instance.value = 0
-    #     return cls._instance
+    
+    #utility module
+    utility = Utilities.Utilities()
+
+    #MQTT instance
+    client = MqttClient.MqttClient("resurgo1.local","raspberry/signal", isBackground=True)
+    
 
     def __new__(cls, *args, **kwargs):
+        """
+        Class initializer for new instance.
+
+        Args:
+            cls (Class) : pointer.
+            args (dict) : class arguments.
+            kwargs (dict) : additional parameters.
+
+        Returns:
+            instance : Class instance 
+        """
         if not cls._instance:
             cls._instance = super().__new__(cls)
         return cls._instance
 
     def __init__(self):
+        """
+        Initiliazed movements for the crane and its devices.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
         self.arcrane = movement.DeviceMovements(
             id ='j1',
             movements = {
             'motors': [
                 { # up / down movement
-                'step': utility.get_configuration('m3_step_pin'), 
-                'drive': utility.get_configuration('m3_dir_pin'), 
+                'step': self.utility.get_configuration('m3_step_pin'), 
+                'drive': self.utility.get_configuration('m3_dir_pin'), 
                 'direction': True, 
-                'reversable': utility.get_configuration('m3_reversible'), 
-                'reverse_movement': utility.get_configuration('m3_reverse_movement'),
-                'movement': utility.get_configuration('m3_movement')}, 
+                'reversable': self.utility.get_configuration('m3_reversible'), 
+                'reverse_movement': self.utility.get_configuration('m3_reverse_movement'),
+                'movement': self.utility.get_configuration('m3_movement')}, 
                 {
-                'step': utility.get_configuration('m1_step_pin'), 
-                'drive': utility.get_configuration('m1_dir_pin'), 
+                'step': self.utility.get_configuration('m1_step_pin'), 
+                'drive': self.utility.get_configuration('m1_dir_pin'), 
                 'direction': True, 
-                'reversable': utility.get_configuration('m1_reversible'), 
-                'reverse_movement': utility.get_configuration('m1_reverse_movement'),
-                'movement': utility.get_configuration('m1_movement')}, 
+                'reversable': self.utility.get_configuration('m1_reversible'), 
+                'reverse_movement': self.utility.get_configuration('m1_reverse_movement'),
+                'movement': self.utility.get_configuration('m1_movement')}, 
                 # {
                 # 'step': utility.get_configuration('m4_step_pin'), 
                 # 'drive': utility.get_configuration('m4_dir_pin'), 
@@ -82,68 +99,80 @@ class Arcrane:
                 # 'reverse_movement': utility.get_configuration('m4_reverse_movement'),
                 # 'movement': utility.get_configuration('m4_movement')}, 
                 {
-                'step': utility.get_configuration('m2_step_pin'), 
-                'drive': utility.get_configuration('m2_dir_pin'), 
+                'step': self.utility.get_configuration('m2_step_pin'), 
+                'drive': self.utility.get_configuration('m2_dir_pin'), 
                 'direction': True, 
-                'reversable': utility.get_configuration('m2_reversible'), 
-                'reverse_movement': utility.get_configuration('m2_reverse_movement'),
-                'movement': utility.get_configuration('m2_movement')}
+                'reversable': self.utility.get_configuration('m2_reversible'), 
+                'reverse_movement': self.utility.get_configuration('m2_reverse_movement'),
+                'movement': self.utility.get_configuration('m2_movement')}
                 ]},
-            pins=[{'down': utility.get_configuration('j1_down_pin'), 
-                    'right': utility.get_configuration('j1_right_pin'), 
-                    'up': utility.get_configuration('j1_up_pin'), 
-                    'left': utility.get_configuration('j1_left_pin'), 
-                    'backward': utility.get_configuration('j2_backward_pin'), 
-                   'sideR': utility.get_configuration('j2_sideR_pin'), 
-                   'forward': utility.get_configuration('j2_forward_pin'), 
-                   'sideL': utility.get_configuration('j2_sideL_pin'), 
-                   'trigger': utility.get_configuration('j2_trigger_pin'), 
-                   'fire': utility.get_configuration('j2_fire_pin'), 
-                   'up_stop_pin': utility.get_configuration('crane_up_stop_pin'),
-                   'down_stop_pin': utility.get_configuration('crane_down_stop_pin'),
-                   'left_stop_pin': utility.get_configuration('crane_move_left_stop_pin'),
-                   'right_stop_pin': utility.get_configuration('crane_move_right_stop_pin'),
+            pins=[{'down': self.utility.get_configuration('j1_down_pin'), 
+                    'right': self.utility.get_configuration('j1_right_pin'), 
+                    'up': self.utility.get_configuration('j1_up_pin'), 
+                    'left': self.utility.get_configuration('j1_left_pin'), 
+                    'backward': self.utility.get_configuration('j2_backward_pin'), 
+                   'sideR': self.utility.get_configuration('j2_sideR_pin'), 
+                   'forward': self.utility.get_configuration('j2_forward_pin'), 
+                   'sideL': self.utility.get_configuration('j2_sideL_pin'), 
+                   'trigger': self.utility.get_configuration('j2_trigger_pin'), 
+                   'fire': self.utility.get_configuration('j2_fire_pin'), 
+                   'up_stop_pin': self.utility.get_configuration('crane_up_stop_pin'),
+                   'down_stop_pin': self.utility.get_configuration('crane_down_stop_pin'),
+                   'left_stop_pin': self.utility.get_configuration('crane_move_left_stop_pin'),
+                   'right_stop_pin': self.utility.get_configuration('crane_move_right_stop_pin'),
                    }])
         print(f"self.joystick1 {self.arcrane.pins}")
     
-    def setupMovementJoystick2(self):
-        print("setupMovementJoystick2 and monitor movements")
-
-    
     def setUpMovements(self):
+        """
+        Setup the motors and monitor the movements.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
         print("setUpMovements and monitor movements")
+        
+        #register callback handler
         self.arcrane.delegate.register_subscriber("movement", self.receive_message)
+        
+        #configure motors
         self.arcrane.configureMovement()
-        self.arcrane.monitorMovements() 
-        #client.publish(TOPIC, "MAKE THE MOTOR MOVE")
+        
+        #monitor joystick and motor movements
+        self.arcrane.monitorMovements()
+
+        #subscribe to mqtt client
+        self.client.subscribe_to_topic() 
+
 
     def receive_message(self, message):
+        """
+        Method that receives the mesages from the callback handler.
+
+        Args:
+            message (str) : The action message.
+
+        Returns:
+            None 
+        """
         print(f"Delegate message received: {message}")
-        client.publish(TOPIC, message)
 
-    
-    def initializeI2c():
-        # Create an SMBus instance
-        bus = smbus.SMBus(1)  # Use 1 for Raspberry Pi (newer models)
-
-        SLAVE_ADDRESS = 0x04  # Replace with the actual address of the slave
-
-        try:
-            while True:
-                # Send data
-                data = [0x01, 0x02, 0x03]  # Example data
-                bus.write_i2c_block_data(SLAVE_ADDRESS, 0, data)
-                print("Sent:", data)
-                time.sleep(1)  # Send every second
-        except KeyboardInterrupt:
-            pass
-
-    def testSwitch():    
-        mSwitch = switch.MicroSwitch(17)
-        if mSwitch.didPressed == False:
-            signal.pause()
-        else:
-            print("stop the motor")
+        #publish to the mqtt subscriber
+        #self.client.publish(self.TOPIC, message)
+        self.client.publish_message(message)
 
     def cleanup(self):
-       self.arcrane.cleanupDevices()     
+        """
+        Stop the motors movement.
+
+        Args:
+            None
+
+        Returns:
+            None 
+        """
+        #arcrane movement install to call clean up devices.
+        self.arcrane.cleanupDevices()     

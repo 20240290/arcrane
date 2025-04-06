@@ -14,23 +14,58 @@
  limitations under
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 class CallbackHandler:
+    """
+    Publisher / Subscriber Class to send and receive messages.
+    
+    Args:
+        None
+
+    Returns:
+        None
+    """
+
     def __init__(self):
         # Dictionary to store subscribers and their callback methods
+        """
+        CallbackHandler class initializer.
+        
+        Args:
+            None
+        
+        Return:
+            None
+        """
         self.subscribers = {}
 
     def register_subscriber(self, subscriber_id, callback):
         """
         Register a subscriber with an ID and their callback function.
-        :param subscriber_id: Unique ID for the subscriber.
-        :param callback: Function to be called when an event occurs.
+        
+        Args:
+            subscriber_id (str) : Unique ID for the subscriber.
+            callback: (function) : Function to be called when an event occurs.
+        
+        Returns:
+            None
         """
         self.subscribers[subscriber_id] = callback
 
     def unregister_subscriber(self, subscriber_id):
         """
         Unregister a subscriber by their ID.
-        :param subscriber_id: Unique ID of the subscriber.
+
+        Args:
+            subscriber_id (str) : Unique ID of the subscriber.
+
+        Returns:
+            None      
         """
         if subscriber_id in self.subscribers:
             del self.subscribers[subscriber_id]
@@ -38,8 +73,13 @@ class CallbackHandler:
     def notify_subscriber(self, subscriber_id, message):
         """
         Notify a specific subscriber.
-        :param subscriber_id: The ID of the subscriber to notify.
-        :param message: The message to send to the subscriber.
+        
+        Args:
+            subscriber_id (str) : The ID of the subscriber to notify.
+            message (str) : The message to send to the subscriber.
+
+        Returns:
+            None    
         """
         if subscriber_id in self.subscribers:
             self.subscribers[subscriber_id](message)
@@ -49,7 +89,12 @@ class CallbackHandler:
     def notify_all(self, message):
         """
         Notify all subscribers.
-        :param message: The message to send to all subscribers.
+
+        Args:
+            message (str) : The message to send to all subscribers.
+
+        Returns:
+            None       
         """
         for subscriber_id, callback in self.subscribers.items():
             callback(message)

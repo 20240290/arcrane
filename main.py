@@ -13,34 +13,117 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
-
 import sys
-import subprocess
-import shutil
-from pathlib import Path
-import constants as const
-import logging
-import classes.DeviceMovements as movement
-import Arcrane as Arcrane
+import os
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify
-import Utilities
-import multiprocessing
+#generate a pdoc. Install pdoc (pip install pdoc) and run
+#pdoc --output-dir arcrane/docs/ResurgoArcrane arcrane
+
+import subprocess
+from pathlib import Path
+import logging
 import threading
 import time
 import atexit
-import subprocess, shlex
 
-#Crane Utitlity Instance
-utility = Utilities.Utilities()
+def check_dependencies(dependencies):
+    """Check if the required dependencies are installed."""
+    missing = []
+    for dependency in dependencies:
+        try:
+            subprocess.run([sys.executable, "-m", dependency, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError:
+            missing.append(dependency)
+        except FileNotFoundError:
+            missing.append(dependency)
+    return missing
 
-#Crane Data Instance
-arcrane = Arcrane.Arcrane()
+def install_mosquitto():
+    try:
+        # Run the 'sudo apt install mosquitto mosquitto-clients' command
+        subprocess.run(['sudo', 'apt', 'install', '-y', 'mosquitto', 'mosquitto-clients'], check=True)
+        print("Mosquitto and Mosquitto clients have been installed successfully.")
+        enable_mosquitto_at_boot()
+    except subprocess.CalledProcessError as e:
+        print(f"Error during installation: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
-#MQTT Server
+# Call the function to install Mosquitto
+install_mosquitto()
 
 
-def gpio_task():
+def install_dependencies(missing):
+    """Attempt to install missing dependencies."""
+    for dependency in missing:
+        print(f"Installing {dependency}...")
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", dependency], check=True)
+        except subprocess.CalledProcessError:
+            print(f"Failed to install {dependency}. Please install it manually.")
+            return False
+    return True
+
+def enable_mosquitto_at_boot():
+    try:
+        # Check if Mosquitto is installed
+        result = subprocess.run(["which", "mosquitto"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            print("Mosquitto is not installed. Install it using 'sudo apt install mosquitto'.")
+            return
+
+        # Enable Mosquitto to start at boot
+        subprocess.run(["sudo", "systemctl", "enable", "mosquitto"], check=True)
+        subprocess.run(["sudo", "systemctl", "start", "mosquitto"], check=True)
+        print("Mosquitto has been enabled to start at boot and is now running.")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while enabling Mosquitto: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+# Define required dependencies
+dependencies = ["gpiozero","flask", "paho-mqtt", "adafruit-circuitpython-servokit"]
+
+#you need to manually install these 2 dependencies using "sudo apt install mosquitto mosquitto-clients" 
+
+print("Checking dependencies...")
+missing = check_dependencies(dependencies)
+
+if missing:
+    print(f"The following dependencies are missing: {', '.join(missing)}")
+    install = input("Would you like to attempt to install them now? (yes/no): ").strip().lower()
+    if install in ['yes', 'y']:
+        if not install_dependencies(missing):
+            print("Dependency installation failed. Exiting.")
+            sys.exit(1)
+    else:
+        print("Dependencies are missing. Exiting.")
+        sys.exit(1)
+
+install_mosquitto()
+from classes.DeviceMovements import DeviceMovements
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+import webbrowser
+import LazyLoader as loader
+
+
+#Arcrane Setup Movements
+def craneSetup():
+    """
+    Setup crane movements.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
+    arcrane = loader.LazyLoader.get_arcrane()
     arcrane.setUpMovements()
 
 
@@ -48,15 +131,42 @@ logging.basicConfig(level=logging.DEBUG)
 # Shared event to signal threads to stop
 stop_event = threading.Event()
 
-app = Flask(__name__)
+try:
+    app = Flask(__name__)
+except ImportError as e:
+    print("Missing flask dependency.")
 
+#Dashboard route
 @app.route("/")
 def index():
+    """
+    Web portal home page
+
+    Args:
+        None
+
+    Returns:
+        web page : index.html
+    """
     return render_template("index.html")
 
+#Configuration route.
 @app.route("/configuration", methods=['GET', 'POST'])
 def configuration():
+    """
+    Configurations page.
+
+    Args:
+        None
+
+    Returns:
+        web page : configuration.html 
+    """
+    #read config.ini file
+    utility = loader.LazyLoader.get_utility()
     utility.config.read('config.ini')  
+
+    #check request method
     if request.method == 'POST':     
         print(f"reversible: {request.form.get('m4_reversible')}")
         data = {
@@ -105,75 +215,81 @@ def configuration():
             "claw_step_delay": request.form['claw_step_delay']
         }
         
+        #save configurations in the config.ini
         utility.save_configuration(data)
+      
         #call the module to configure the crane movements and devices.
-        
         return redirect(url_for('configuration'))
     return render_template("configuration.html",  config=utility.config['Settings'])
 
-
+#Joystick route.
 @app.route("/joystick")
 def joystick():
+    """
+    Configurations page.
+
+    Args:
+        None
+
+    Returns:
+        web page : configuration.html
+    """
     #setup motors from arcrane module
     return render_template("joystick.html")
 
-@app.route('/move_joystick/<direction>')
-def move_joystick(direction):
-    # Here you can handle the joystick input
-    print(f"Joystick moved: {direction}")
-    movement1 = movement.DeviceMovements(step=const.M1_STEP_PIN, drive=const.M1_DIR_PIN,direction_forward=True)
-    movement2 = movement.DeviceMovements(step=const.M2_STEP_PIN, drive=const.M2_DIR_PIN,direction_forward=True)
-    movement3 = movement.DeviceMovements(step=const.M3_STEP_PIN, drive=const.M3_DIR_PIN,direction_forward=True)
-    movement4 = movement.DeviceMovements(step=const.M4_STEP_PIN, drive=const.M4_DIR_PIN,direction_forward=True)
-    if direction == 'up':
-        movement1.motor.rotate_motor()
-    elif direction == 'up-left':
-        movement2.motor.rotate_motor()    
-    elif direction == 'down-left':
-        movement3.motor.rotate_motor()
-    elif direction == 'down-right':
-        movement4.motor.rotate_motor()
-
-    return jsonify({'status': 'success', 'direction': direction})
-
-@app.route("/loadDefaults", methods=['POST'])
-def loadDefaults():
-    data =  {'rotation_speed': '1000'}
-    return redirect(url_for('configuration'))
-
-@app.route('/run-script', methods=['POST'])
-def run_script():
-    # Your Python script logic here
-    result = {"message": "Script executed successfully!"}
-    return jsonify(result)
-
+#Long press action route.
 @app.route('/long_press/<direction>/<device>', methods=['POST'])
 def long_press(direction,device):
+    """
+    Method to handle the long press gesture and correspond to the movement of the joystick.
+
+    Args:
+        direction (str) : The direction of the joystick
+        device (str) : The joystick selected.
+    
+    Returns:
+        str : status message
+    """
     # Handle the long-press action here
     print(f"Joystick moved: {direction} device: { device }")
-    print(f"check if joystick is added: {arcrane.joystick1 != None}")
-    if arcrane.joystick1 != None:
-        arcrane.joystick1.monitorWebMovements(direction)
+    arcrane = loader.LazyLoader.get_arcrane()
+    if arcrane.arcrane != None:
+        #convvert the receive movement depends on the device
+        if device == "crane":
+            arcrane.arcrane.monitorWebMovements(direction)
+        else:
+            movement = "forward"
+            if direction == "up":
+                movement = "forward"
+            elif direction == "down":
+                movement = "backward" 
+            elif direction == "left":
+                movement = "sideL"   
+            elif direction == "right":
+                movement = "sideR"
+            elif direction == "fire":
+                movement = "fire"
+            elif direction == "trigger"  :
+                movement = "trigger"                
+            arcrane.arcrane.monitorWebMovements(movement)
+
+        
 
     return jsonify({'status': 'success', 'direction': direction})
-
-def get_running_flask_processes(port):
-    processes = []
-    cmd = f"lsof -ti:{port}"
-    result = subprocess.run(shlex.split(cmd), capture_output=True, text=True)
-    if result.stdout:
-        if "\n" in result.stdout:
-            processes += result.stdout.split("\n")
-            processes = [int(x) for x in processes if x != '']
-        else:
-            processes += [int(result.stdout)]
-    return processes
 
 def cleanup():
     atexit.register(cleanup)   
 
-
 def run_flask():
+    """
+    Initialize flask instance.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     app.run(threaded=True)
 
 def worker():
@@ -181,27 +297,23 @@ def worker():
         print("Working...")
         time.sleep(1)
     print("Thread exiting gracefully...")
-     
 
-if __name__ == '__main__':
-    try:
-        #list of threads
-        #threads = []
+def main():
+    """Main function to run the app."""
+    print("All dependencies are installed!")
+    # Open a browser to a specific URL
+    url = "http://localhost:5000"
+    print(f"Launching browser to {url}...")
+    threads = []
 
-        # Start Flask in a separate thread
-        flask_thread = threading.Thread(target=run_flask)
-        flask_thread.start()
-        #threads.append(flask_thread)
-        gpio_task()
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+    threads.append(flask_thread)
+    craneSetup()
+    enable_mosquitto_at_boot()
+    webbrowser.open(url)
 
-    except KeyboardInterrupt:
-        # Signal all threads to stop by setting the stop event
-                # flask_thread.start()
-        # threads.append(flask_thread)stop_event.set()pwd
 
-        print("All threads have exited. Program is shutting down.")
-        print("Exiting...")
-    finally:
-        # cleanup()
-        print("clean up")
-        #sys.exit(0)
+if __name__ == "__main__":
+    main()

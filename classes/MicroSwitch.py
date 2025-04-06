@@ -14,6 +14,12 @@
  limitations under the License.
  """
 
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from gpiozero import Button
 from time import sleep
 import constants as const
@@ -22,15 +28,13 @@ class MicroSwitch():
     didPressed: bool
     def __init__(self, pin: int):
         """
-        Default Class initializer with that accepts the Servo device pin.
+        Class initializer that accepts the Servo device pin.
 
-        Parameters:
-        -----------
-        None
+        Args:
+            None
 
-        Return:
-        -------
-        None
+        Returns:
+            None
         """
         
         self.switch = Button(pin)
@@ -40,10 +44,28 @@ class MicroSwitch():
     
     # Define the function to be called when the button is pressed
     def on_button_pressed(self):
+        """
+        Action when button is pressed.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.didPressed = True
 
     # Define the function to be called when the button is released
     def on_button_released(self):
+        """
+        Action when button is released.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.didPressed = False
         
     

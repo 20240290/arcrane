@@ -13,20 +13,35 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  """
+
+import sys
+import os
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# Add the parent directory to sys.path
+sys.path.append(script_dir)
+
 from gpiozero import OutputDevice
 from time import sleep
 import constants as const
 import Utilities as utilities
 
-""" Generic Stepper Motor Class """
-
 class PWMStepperMotor():
+    """
+    Stepper motor class that will holds the motors added.
+    
+    Args:
+    -----------
+    None    
+    
+    Return:
+    -------
+    None
+    """
     motor_step: OutputDevice
     motor_dir: OutputDevice
     reversable: bool
     reverse_movement: str
     utility = utilities.Utilities()
-
 
     #add a tag to the motor
     def __init__(self, 
@@ -37,11 +52,22 @@ class PWMStepperMotor():
                  reverse_movement = '', 
                  movement = ''):
         """
-        Default Class initializer with that accepts the Output device pin.
+        Stepper motor class initializer that accepts the Output device pin.
 
-        Parameters:
+        Args:
         -----------
-        None
+        step: int
+            The motor pin.
+        drive: int
+            The drive pin.
+        direction_forward: boolean
+            Boolean flag to determine the motor direction, clockwise & counter clockwise.
+        reversable: boolean           
+            Boolean flag to determine if the motor is reversable.
+        reverse_movement: str
+            Reverse movement of the motor.
+        movement: str
+            The movement associated of the motor.    
 
         Return:
         -------
@@ -64,7 +90,7 @@ class PWMStepperMotor():
         """
         Setup and pin out output device.
 
-        Parameters:
+        Args:
         -----------
         step: int
             - stepper pin value.
@@ -86,7 +112,7 @@ class PWMStepperMotor():
         """
         Rotate the specified motor one step.
 
-        Parameters:
+        Args:
         -----------
         None
 
@@ -105,15 +131,15 @@ class PWMStepperMotor():
         """
         Rotate the specified motor one step.
 
-        Parameters:
+        Args:
         -----------
-        None
+        direction: boolean
+            Boolean flag to determine the motor direction, clockwise & counter clockwise.
 
         Return:
         -------
         None
         """
-        """"""
         self.motor_dir.value = direction
         self.motor_step.on()
         sleep(float(self.motor_delay))
@@ -121,6 +147,15 @@ class PWMStepperMotor():
         sleep(float(self.motor_delay))
 
     def runMotor(self, run: bool):
+        """
+        Turn on & off the motor.
+
+        Args:
+            run (boolean) : Start or stop the motor movement.
+
+        Returns:
+            None
+        """
         if run:
             self.motor_step.on()
         else:
